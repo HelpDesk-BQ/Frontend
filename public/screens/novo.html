@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%23d04841'/%3E%3C/svg%3E" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' http://localhost:3000"
+    />
+    <title>Novo chamado — HelpDesk BQ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+    <header class="topnav">
+      <div class="container topnav__inner">
+        <a class="topnav__brand" href="/screens/tickets.html">HelpDesk BQ</a>
+        <nav class="topnav__links" aria-label="Principal">
+          <a href="/screens/tickets.html">Chamados</a>
+          <a href="/screens/novo.html" aria-current="page">Novo chamado</a>
+          <a href="/screens/dashboard.html">Dashboard</a>
+          <a href="/screens/login.html" class="logout-link" data-action="logout"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4v12h5M6 8h7m0 0-2-2m2 2-2 2"/></svg>Sair</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="page">
+      <div class="container form-medium">
+        <p class="eyebrow">Abertura</p>
+        <h1>Novo chamado</h1>
+        <div class="card">
+          <form id="ticket-form" novalidate>
+            <div id="form-error" class="form-error" hidden></div>
+            <div class="field">
+              <label for="title">Título (10 a 100 caracteres)</label>
+              <input id="title" name="title" type="text" maxlength="100" required />
+            </div>
+            <div class="field">
+              <label for="description">Descrição (mínimo 30 caracteres)</label>
+              <textarea id="description" name="description" maxlength="5000" required></textarea>
+            </div>
+            <div class="field">
+              <label for="priority">Prioridade</label>
+              <select id="priority" name="priority" required>
+                <option value="low">Baixa</option>
+                <option value="medium" selected>Média</option>
+                <option value="high">Alta</option>
+                <option value="critical">Crítica</option>
+              </select>
+            </div>
+            <button id="submit" class="btn btn--primary" type="submit" data-testid="ticket-submit">Abrir chamado</button>
+          </form>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="/js/pages/novo.js"></script>
+  </body>
+</html>
