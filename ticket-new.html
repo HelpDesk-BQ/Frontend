@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Abrir chamado — HelpDesk BQ</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html">HelpDesk BQ<small>Operação Software Confiável</small></a>
+      <nav class="site-nav" aria-label="Navegação principal" data-app-nav>
+        <a href="index.html" data-nav="home">Início</a>
+        <a href="dashboard.html" data-nav="dashboard">Painel</a>
+        <a href="tickets.html" data-nav="tickets">Chamados</a>
+      </nav>
+      <div class="header-meta">
+        <span data-user-slot></span>
+        <button class="btn btn-secondary" type="button" data-logout>Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" id="conteudo">
+    <section class="hero prose">
+      <p class="eyebrow">Novo chamado</p>
+      <h1>Descreva o problema com calma.</h1>
+      <p class="lede">Título com ao menos 10 caracteres, descrição com ao menos 30. Bons detalhes aceleram o atendimento.</p>
+    </section>
+
+    <section class="section section--narrow">
+      <p id="form-error" class="form-error" role="alert" hidden></p>
+      <form id="ticket-form" novalidate>
+        <div class="field">
+          <label for="title">Título</label>
+          <input id="title" name="title" type="text" required maxlength="100" placeholder="Ex.: Impressora do setor fiscal parou" />
+        </div>
+        <div class="field">
+          <label for="description">Descrição</label>
+          <textarea id="description" name="description" rows="6" required maxlength="5000" placeholder="Sintomas, impacto e o que já foi tentado…"></textarea>
+        </div>
+        <div class="field">
+          <label for="priority">Prioridade</label>
+          <select id="priority" class="select">
+            <option value="low">Baixa</option>
+            <option value="medium" selected>Média</option>
+            <option value="high">Alta</option>
+            <option value="critical">Crítica</option>
+          </select>
+        </div>
+        <button id="ticket-submit" class="btn btn-primary" type="submit">Abrir chamado</button>
+      </form>
+    </section>
+  </main>
+
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <script type="module">
+    import { initTicketNewPage } from './js/pages/ticket-new.js';
+    initTicketNewPage();
+  </script>
+</body>
+</html>
