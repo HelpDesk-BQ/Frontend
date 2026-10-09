@@ -1,0 +1,15 @@
+@media (max-width: 900px) {
+  .login-layout { grid-template-columns: 1fr; gap: 32px; }
+  .site-header__inner { flex-wrap: wrap; }
+  .header-meta { width: 100%; justify-content: space-between; }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 0 16px; }
+  main { padding: 24px 0 48px; }
+  .site-nav { flex-wrap: wrap; }
+  .site-nav a { padding: 10px 12px; }
+  .definition-list { grid-template-columns: 1fr; gap: 4px; }
+  .card { padding: 20px; }
+  .toast-region { left: 16px; right: 16px; bottom: 16px; max-width: none; }
+}
