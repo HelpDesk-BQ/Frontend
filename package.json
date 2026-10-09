@@ -1,0 +1,24 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Interface web do HelpDesk BQ (HTML/CSS/JS nativo, multipage)",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve public -l 5500",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
+    "test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --runInBand",
+    "lint": "eslint public/js tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HelpDesk-BQ/Frontend.git"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2"
+  }
+}
