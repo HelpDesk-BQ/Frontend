@@ -1,0 +1,557 @@
+/* Componentes: cards 16px, botões Ink, pills com texto+símbolo, tabelas que
+   empilham no mobile (RNF02: nada de rolagem horizontal). */
+
+/* Botões — primário Ink (contraste AA); vermelho só em acentos grandes. */
+.btn {
+  display: inline-block;
+  font-family: var(--font-inter);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: var(--radius-buttons);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.btn--primary {
+  background: var(--color-ink);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: var(--color-graphite);
+  box-shadow: var(--shadow-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-ink);
+  box-shadow: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.btn--danger {
+  background: var(--color-signal-red);
+  color: #fff;
+  border: 2px solid var(--color-signal-red);
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: var(--color-signal-red-hover);
+  border-color: var(--color-signal-red-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.btn--danger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn--small {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+/* Cards Paper sobre Bone. */
+.card {
+  background: var(--surface-surface);
+  border-radius: var(--radius-cards);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-24);
+}
+
+.card + .card {
+  margin-top: var(--spacing-16);
+}
+
+/* Formulários: label associado, erro junto ao campo. */
+.field {
+  margin-bottom: var(--spacing-16);
+}
+
+.field label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: var(--spacing-4);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--color-ink);
+  background: #fff;
+  border: 1px solid var(--color-graphite);
+  border-radius: var(--radius-buttons);
+  padding: 10px 12px;
+}
+
+.field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.field [aria-invalid='true'] {
+  border-color: var(--color-signal-red);
+  border-width: 2px;
+}
+
+.field-error {
+  color: var(--color-ink);
+  border-left: 4px solid var(--color-signal-red);
+  padding-left: var(--spacing-8);
+  font-size: 14px;
+  margin: var(--spacing-4) 0 0;
+}
+
+.form-error {
+  border: 2px solid var(--color-signal-red);
+  border-radius: var(--radius-buttons);
+  background: var(--surface-surface);
+  padding: var(--spacing-12) var(--spacing-16);
+  margin-bottom: var(--spacing-16);
+}
+
+.form-note {
+  color: var(--color-charcoal);
+  font-size: 14px;
+}
+
+/* Pills: papel com borda Graphite; informação no texto, nunca só na cor. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 138px;
+  background: var(--surface-surface);
+  border: 1px solid var(--color-graphite);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.pill__symbol {
+  display: inline-flex;
+  font-size: 11px;
+}
+
+.pill__symbol svg {
+  display: block;
+}
+
+.pill--status-critical,
+.pill--priority-critical {
+  border-color: var(--color-signal-red);
+  border-width: 2px;
+}
+
+.pill--priority-critical .pill__symbol,
+.pill--status-closed .pill__symbol {
+  color: var(--color-signal-red);
+}
+
+/* Tabelas que viram cartões no mobile. */
+.table-wrap {
+  background: var(--surface-surface);
+  border-radius: var(--radius-cards);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+table.tickets {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tickets th,
+.tickets td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-mist);
+  vertical-align: top;
+}
+
+.tickets th {
+  font-family: var(--font-mdio);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-charcoal);
+  background: var(--surface-elevated);
+}
+
+.tickets tr:last-child td {
+  border-bottom: none;
+}
+
+.tickets tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.tickets tbody tr:hover {
+  background: var(--surface-elevated);
+}
+
+.tickets a {
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .tickets thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .tickets tr {
+    display: block;
+    border-bottom: 2px solid var(--color-mist);
+  }
+
+  .tickets td {
+    display: block;
+    border-bottom: none;
+    padding: 8px 16px;
+  }
+
+  .tickets td[data-label]::before {
+    content: attr(data-label) ': ';
+    font-weight: 600;
+    color: var(--color-charcoal);
+  }
+}
+
+/* Filtros + paginação. */
+.toolbar {
+  display: flex;
+  gap: var(--spacing-12);
+  flex-wrap: wrap;
+  align-items: end;
+  margin-bottom: var(--spacing-16);
+}
+
+.toolbar .field {
+  margin-bottom: 0;
+  min-width: 140px;
+}
+
+.pager {
+  display: flex;
+  gap: var(--spacing-8);
+  align-items: center;
+  margin-top: var(--spacing-16);
+  font-size: 14px;
+  color: var(--color-charcoal);
+}
+
+/* Estado vazio (RF14): explica + oferece ação. */
+.empty {
+  text-align: center;
+  padding: var(--spacing-48) var(--spacing-24);
+}
+
+.empty__title {
+  font-size: var(--text-subheading);
+  font-weight: var(--font-weight-medium);
+  margin: 0 0 var(--spacing-16);
+}
+
+/* Linha do tempo do histórico. */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timeline li {
+  border-left: 2px solid var(--color-mist);
+  padding: 0 0 var(--spacing-12) var(--spacing-16);
+  margin-left: 6px;
+  font-size: 14px;
+}
+
+.timeline li:last-child {
+  padding-bottom: 0;
+}
+
+.timeline time {
+  color: var(--color-charcoal);
+  font-size: 12px;
+}
+
+/* Comentários. */
+.comment {
+  border-top: 1px solid var(--color-mist);
+  padding: var(--spacing-12) 0;
+  font-size: 14px;
+}
+
+.comment:first-child {
+  border-top: none;
+}
+
+/* Grade do dashboard: cards iguais, destaque só no hover. */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--spacing-16);
+  margin-bottom: var(--spacing-16);
+}
+
+.stats .stat {
+  margin-top: 0;
+  height: 100%;
+  min-height: 148px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stats .stat:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats .stat,
+  .stats .stat:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+.stat {
+  text-align: center;
+  padding: var(--spacing-24) var(--spacing-16);
+}
+
+.stat__number {
+  font-size: var(--text-heading);
+  font-weight: var(--font-weight-light);
+  margin: 0;
+}
+
+.stat__label {
+  color: var(--color-charcoal);
+  font-size: 14px;
+  margin: var(--spacing-4) 0 0;
+}
+
+.actions-row {
+  display: flex;
+  gap: var(--spacing-8);
+  flex-wrap: wrap;
+  margin-top: var(--spacing-16);
+}
+
+.actions-row--center {
+  justify-content: center;
+}
+
+.container--detail {
+  max-width: 720px;
+}
+
+/* Modal de confirmação acessível. */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(24, 23, 23, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-16);
+  z-index: 200;
+}
+
+.modal {
+  background: var(--surface-surface);
+  border-radius: var(--radius-cards);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-24);
+  max-width: 480px;
+  width: 100%;
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+/* Contador de caracteres sob o campo. */
+.char-counter {
+  text-align: right;
+}
+
+/* Card de metadados com duas colunas lado a lado. */
+.meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-8) var(--spacing-16);
+}
+
+.meta-grid p {
+  margin: 0 0 var(--spacing-8);
+}
+
+@media (max-width: 560px) {
+  .meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Zona de perigo: contorno vermelho. */
+.card--danger {
+  border: 2px solid var(--color-signal-red);
+}
+
+/* Asterisco de obrigatoriedade ao lado do label. */
+.required {
+  color: var(--color-signal-red);
+  font-weight: 600;
+}
+
+/* Formulário estreito: login e abertura. */
+.form-narrow {
+  max-width: 420px;
+}
+
+.form-medium {
+  max-width: 560px;
+}
+
+/* Login em tela cheia: metade Ink com a marca, metade Bone com o form. */
+.login-full {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100svh;
+}
+
+.login-left {
+  background: var(--color-ink);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-48);
+}
+
+.login-left__content {
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.login-left .eyebrow {
+  color: var(--color-signal-red);
+}
+
+.login-left h2 {
+  font-weight: var(--font-weight-light);
+  font-size: var(--text-heading);
+  letter-spacing: -0.64px;
+  margin: 0 0 var(--spacing-16);
+}
+
+.login-left ul {
+  list-style: none;
+  margin: var(--spacing-24) 0;
+  padding: 0;
+  display: grid;
+  gap: var(--spacing-16);
+}
+
+.login-left li {
+  display: flex;
+  gap: var(--spacing-12);
+  align-items: flex-start;
+  font-size: 14px;
+}
+
+.login-left li svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+}
+
+.login-left a {
+  color: #fff;
+}
+
+.login-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-32) var(--spacing-16);
+}
+
+.login-right__form {
+  width: 100%;
+  max-width: 420px;
+}
+
+@media (max-width: 860px) {
+  .login-full {
+    grid-template-columns: 1fr;
+  }
+
+  .login-left {
+    padding: var(--spacing-24) var(--spacing-16);
+  }
+
+  .login-left ul {
+    display: none;
+  }
+}
+
+/* Campo de senha com olho. */
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  padding-right: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-buttons);
+  padding: 6px;
+  cursor: pointer;
+  color: var(--color-ink);
+  line-height: 0;
+}
+
+.password-toggle svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
