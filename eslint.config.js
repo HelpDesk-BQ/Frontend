@@ -2,23 +2,20 @@ import globals from 'globals';
 
 export default [
   {
-    files: ['js/**/*.js'],
+    files: ['public/js/**/*.js', 'tests/**/*.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
-      globals: { ...globals.browser }
+      globals: { ...globals.browser },
     },
     rules: {
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
-    }
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-console': ['error', { allow: ['warn', 'error'] }],
+    },
   },
   {
     files: ['tests/**/*.js'],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: 'module',
-      globals: { ...globals.node, ...globals.jest }
-    }
+    languageOptions: { globals: { ...globals.browser, ...globals.jest } },
   },
-  { ignores: ['node_modules/', 'coverage/'] }
+  { ignores: ['node_modules/', 'coverage/'] },
 ];

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%23d04841'/%3E%3C/svg%3E" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' http://localhost:3000"
+    />
+    <title>Detalhe — HelpDesk BQ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+    <header class="topnav">
+      <div class="container topnav__inner">
+        <a class="topnav__brand" href="/screens/tickets.html">HelpDesk BQ</a>
+        <nav class="topnav__links" aria-label="Principal">
+          <a href="/screens/tickets.html">Chamados</a>
+          <a href="/screens/novo.html">Novo chamado</a>
+          <a href="/screens/dashboard.html">Dashboard</a>
+          <a href="/screens/login.html" class="logout-link" data-action="logout"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4v12h5M6 8h7m0 0-2-2m2 2-2 2"/></svg>Sair</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="page">
+      <div class="container container--detail">
+        <p class="eyebrow">Chamado</p>
+        <p><a class="btn btn--ghost" href="/screens/tickets.html">← Voltar à lista</a></p>
+        <h1 id="ticket-title">Carregando…</h1>
+        <div id="state-error" class="form-error" hidden></div>
+        <div id="fatal" hidden></div>
+        <div id="detail" hidden>
+          <div class="card">
+            <div class="meta-grid">
+              <p><strong>Estado:</strong> <span id="ticket-status"></span></p>
+              <p><strong>Prioridade:</strong> <span id="ticket-priority"></span></p>
+            </div>
+            <p id="ticket-meta" class="form-note"></p>
+            <p id="ticket-assignee-row" hidden><strong>Responsável:</strong> <span id="ticket-assignee"></span></p>
+            <p id="ticket-description"></p>
+          </div>
+          <div class="card" data-requires="technician admin" id="manage-card">
+            <h2>Atendimento</h2>
+            <p id="current-state-hint" class="form-note"></p>
+            <p id="no-transitions" class="form-note" hidden>Estado final — sem transições disponíveis.</p>
+            <form id="manage-form" novalidate>
+              <p id="manage-error" class="form-error" hidden></p>
+              <div class="field">
+                <label for="status">Mudar estado para</label>
+                <select id="status" name="status">
+                  <option value="">Manter o estado atual</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="comment">Comentário (obrigatório para fechar; vira resolução ao fechar ou resolver)</label>
+                <textarea id="comment" name="comment" maxlength="1000"></textarea>
+              </div>
+              <div class="field">
+                <label for="priority">Prioridade</label>
+                <select id="priority" name="priority">
+                  <option value="low">Baixa</option>
+                  <option value="medium">Média</option>
+                  <option value="high">Alta</option>
+                  <option value="critical">Crítica</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="assignee">Responsável</label>
+                <select id="assignee" name="assignee">
+                  <option value="">Sem responsável</option>
+                </select>
+              </div>
+              <button id="manage-submit" class="btn btn--primary" type="submit">Salvar mudanças</button>
+            </form>
+          </div>
+          <div class="card">
+            <h2>Comentários</h2>
+            <div id="comments"></div>
+            <form id="comment-form" novalidate>
+              <div class="field">
+                <label for="body">Novo comentário (até 1000 caracteres)</label>
+                <textarea id="body" name="body" maxlength="1000" required></textarea>
+              </div>
+              <button id="comment-submit" class="btn btn--primary" type="submit">Comentar</button>
+            </form>
+          </div>
+          <div class="card">
+            <h2>Histórico</h2>
+            <ul id="history" class="timeline"></ul>
+          </div>
+          <div class="card card--danger" data-requires="admin">
+            <h2>Zona de perigo</h2>
+            <p class="form-note">A exclusão é lógica e fica registrada na auditoria com a sua justificativa.</p>
+            <form id="delete-form" novalidate>
+              <div class="field">
+                <label for="justification">Justificativa da exclusão <span class="required" aria-hidden="true">*</span><span class="sr-only">(obrigatório)</span></label>
+                <textarea id="justification" name="justification" maxlength="1000" required></textarea>
+              </div>
+              <div class="field">
+                <label for="confirm-title">Digite o nome do chamado para confirmar <span class="required" aria-hidden="true">*</span><span class="sr-only">(obrigatório)</span></label>
+                <input id="confirm-title" name="confirmTitle" type="text" autocomplete="off" required />
+              </div>
+              <button id="delete-submit" class="btn btn--danger" type="submit" disabled>Excluir chamado</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="/js/pages/detalhe.js"></script>
+  </body>
+</html>

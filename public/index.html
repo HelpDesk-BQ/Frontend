@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%23d04841'/%3E%3C/svg%3E" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' http://localhost:3000"
+    />
+    <meta
+      name="description"
+      content="HelpDesk BQ — registro, acompanhamento e auditoria de chamados de TI com fila priorizada, transições e relatórios."
+    />
+    <title>HelpDesk BQ — Gestão de chamados de TI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/landing.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+    <header class="topnav">
+      <div class="container topnav__inner">
+        <a class="topnav__brand" href="/">HelpDesk BQ</a>
+        <nav class="topnav__links" aria-label="Principal">
+          <a href="#recursos">Recursos</a>
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#numeros">Números</a>
+          <a href="/screens/login.html">Entrar</a>
+          <a href="/screens/novo.html" class="btn btn--primary btn--small">Abrir chamado</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <div class="container">
+        <section class="hero">
+          <p class="eyebrow">ETEC Bento Quirino · Operação Software Confiável</p>
+          <h1>Cada chamado no lugar certo, do registro à resolução</h1>
+          <p>
+            Registre incidentes em segundos, acompanhe cada mudança de estado e
+            mantenha o histórico completo. Solicitantes abrem e acompanham,
+            técnicos trabalham em fila priorizada e administradores auditam tudo.
+          </p>
+          <div class="hero__cta">
+            <a href="/screens/novo.html" class="btn btn--primary">Abrir chamado</a>
+            <a href="/screens/login.html" class="btn btn--ghost">Entrar</a>
+          </div>
+        </section>
+
+        <section id="recursos" aria-label="Recursos">
+          <div class="feature-row">
+            <article class="feature-card feature-card--highlight" tabindex="0">
+              <svg class="feature-card__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h12v7H2z"/><path d="M2 6l2 4h8l2-4"/></svg>
+              <p class="eyebrow">Fila priorizada</p>
+              <h3>Uma fila para todos os chamados</h3>
+              <p>Filtros por estado e prioridade, paginação e visibilidade por papel.</p>
+            </article>
+            <article class="feature-card" tabindex="0">
+              <svg class="feature-card__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10m0 0-3-3m3 3-3 3"/></svg>
+              <h3>Transições com regra</h3>
+              <p>Fluxo de aberto a fechado, com reabertura justificada. O fechamento pede comentário de resolução.</p>
+            </article>
+            <article class="feature-card" tabindex="0">
+              <svg class="feature-card__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2l5 2v4c0 3-2 5-5 6-3-1-5-3-5-6V4z"/><path d="M6 8l1.5 1.5L10 7"/></svg>
+              <h3>Auditoria total</h3>
+              <p>Cada mudança registra ator, valor anterior e valor novo na mesma transação.</p>
+            </article>
+            <article class="feature-card" tabindex="0">
+              <svg class="feature-card__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13V8m5 5V3m5 10V6"/></svg>
+              <h3>Resumo em totais</h3>
+              <p>Totais por estado e prioridade, com os mesmos filtros da fila.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="showcase" aria-label="Demonstração">
+          <h2>A fila, como o técnico vê</h2>
+          <div class="mock" role="img" aria-label="Ilustração da lista de chamados com colunas de estado, título e prioridade">
+            <div class="mock__bar"><span>HelpDesk BQ · Fila</span><span>4 chamados</span></div>
+            <div class="mock__grid">
+              <div class="mock__head" aria-hidden="true"><span>Estado</span><span>Chamado</span><span>Prioridade</span></div>
+              <div class="mock__row">
+                <span class="pill"><svg class="pill__symbol" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8" cy="8" r="6"/></svg><span>Aberto</span></span>
+                <span><span class="mock__title">Impressora do setor fiscal parou</span> <span class="mock__id">#1042</span></span>
+                <span class="pill pill--priority-critical"><svg class="pill__symbol" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13V3m0 1h8l-2 3 2 3H5"/></svg><span>Alta</span></span>
+              </div>
+              <div class="mock__row">
+                <span class="pill"><svg class="pill__symbol" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor" stroke="none"/></svg><span>Em análise</span></span>
+                <span><span class="mock__title">Rede sem fio instável no laboratório</span> <span class="mock__id">#1041</span></span>
+                <span class="pill pill--priority-critical"><svg class="pill__symbol" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13V3m0 1h8l-2 3 2 3H5"/></svg><span>Alta</span></span>
+              </div>
+              <div class="mock__row">
+                <span class="pill"><svg class="pill__symbol" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3l8 5-8 5z"/></svg><span>Em atendimento</span></span>
+                <span><span class="mock__title">Conta de e-mail institucional bloqueada</span> <span class="mock__id">#1038</span></span>
+                <span class="pill"><svg class="pill__symbol" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 13V8m5 5V3m5 10V6"/></svg><span>Média</span></span>
+              </div>
+              <div class="mock__row">
+                <span class="pill"><svg class="pill__symbol" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.5 3.5L13 4"/></svg><span>Resolvido</span></span>
+                <span><span class="mock__title">Troca de projetor da sala de aula</span> <span class="mock__id">#1035</span></span>
+                <span class="pill"><svg class="pill__symbol" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 13V8m5 5V3m5 10V6"/></svg><span>Média</span></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="como-funciona" class="section" aria-label="Como funciona">
+          <p class="eyebrow">Papéis</p>
+          <h2>Um fluxo para cada papel</h2>
+          <p>Cada papel enxerga e faz o que lhe cabe e o servidor valida todo o resto.</p>
+          <div class="role-grid role-grid--left">
+            <article class="feature-card" tabindex="0">
+              <h3>Solicitante</h3>
+              <p>Abre chamados em segundos, acompanha cada estado e complementa por comentários.</p>
+            </article>
+            <article class="feature-card" tabindex="0">
+              <h3>Técnico</h3>
+              <p>Atende a fila autorizada, aplica transições, comenta o andamento e registra a resolução.</p>
+            </article>
+            <article class="feature-card" tabindex="0">
+              <h3>Administrador</h3>
+              <p>Acompanha os totais, lê o histórico completo e exclui com justificativa registrada.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="numeros" class="section" aria-label="Números">
+          <p class="eyebrow">Números</p>
+          <h2>Resultados medidos</h2>
+          <div class="stats">
+            <div class="card stat"><p class="stat__number">12</p><p class="stat__label">rotas na API</p></div>
+            <div class="card stat"><p class="stat__number">154</p><p class="stat__label">testes no backend</p></div>
+            <div class="card stat"><p class="stat__number">31ms</p><p class="stat__label">p95 com 20 usuários</p></div>
+            <div class="card stat"><p class="stat__number">5</p><p class="stat__label">telas no frontend</p></div>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <div class="footer__grid">
+            <div>
+              <h3>Produto</h3>
+              <ul>
+                <li><a href="/screens/tickets.html">Chamados</a></li>
+                <li><a href="/screens/novo.html">Abrir chamado</a></li>
+                <li><a href="/screens/dashboard.html">Dashboard</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3>Acesso</h3>
+              <ul>
+                <li><a href="/screens/login.html">Entrar</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3>Projeto</h3>
+              <ul>
+                <li><a href="https://github.com/HelpDesk-BQ/Backend">Backend</a></li>
+                <li><a href="https://github.com/HelpDesk-BQ/Frontend">Frontend</a></li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </body>
+</html>

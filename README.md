@@ -1,41 +1,47 @@
-# Frontend — HelpDesk BQ
+# Frontend HelpDesk BQ
 
-HTML + CSS + JS puro, sem framework. Cliente real do backend Express.
+Interface web (HTML/CSS/JS nativo, multipage) do HelpDesk BQ.
 
-## Rotas reais consumidas
+## Páginas (`public/`)
 
-- `GET /health` — selo de estado em `index.html`.
-- `POST /api/sessions` — login em `login.html` (`{ email, password }` estrito).
-- `GET /api/tickets?status=&priority=&page=&limit=` — lista em `tickets.html`
-  (`{ items, total, page, limit }`).
-- `POST /api/tickets` — abertura em `ticket-new.html`
-  (`{ title 10–100, description 30–5000, priority }` → 201).
-- `GET /api/tickets/:id` — detalhe em `ticket-detail.html`.
-- `PATCH /api/tickets/:id/status` — transições
-  (`open→analysis→in_progress→resolved→closed`; encerrar exige comentário).
-- `PATCH /api/tickets/:id/priority` e `:id/assignee` — técnico/admin
-  (sem endpoint de usuários na API: atribuir a si, remover ou colar UUID).
-- `GET/POST /api/tickets/:id/comments` + `GET :id/history` — conversa e timeline.
-- `DELETE /api/tickets/:id` com `{ justification }` no corpo — só admin.
-- `GET /api/reports/summary` — painel em `dashboard.html`
-  (`{ total, byStatus, byPriority }`, com escopo por papel).
+| Página (`public/`, telas em `screens/`) | Rota API | Quem usa |
+|---|---|---|
+| `/` (landing) | — (apresentação) | visitantes |
+| `screens/login.html` | `POST /api/sessions` (401/423) | todos |
+| `screens/tickets.html` | `GET /api/tickets` (filtros, paginação, vazio) | todos (dono forçado p/ solicitante) |
+| `screens/novo.html` | `POST /api/tickets` | autenticados |
+| `screens/detalhe.html?id=` | detalhe, transição, prioridade, **responsável**, comentários, histórico, delete admin | transição/prioridade/responsável: técnico+admin; delete: admin |
+| `screens/dashboard.html` | `GET /api/reports/summary` + **tabela recentes** | todos (escopo próprio p/ solicitante) |
+| `screens/404.html` | página não encontrada | visitantes |
 
-Permissões espelham o backend: solicitante lê os próprios + comenta;
-técnico escreve (sem excluídos/encerrados); admin exclui com justificativa.
-
-## Rodar
+## Início rápido
 
 ```bash
 npm install
-npm test
-npx live-server --port=5500
+npx serve public -l 5500   # casa com CORS_ORIGIN da API
 ```
 
-Backend em `http://localhost:3000` (ver `Backend/README.md`).
-Para apontar para outra base, defina antes dos módulos:
-
-```html
-<script>window.__HELPDESK_API_BASE__ = 'http://localhost:3000';</script>
+```bash
+npm test              
+npm run test:coverage 
+npm run lint
 ```
 
-Sessão em `sessionStorage` (`helpdesk.session`), sem segredos no código.
+Login demo: `lia@exemplo.local` / `Solicitante123!` (técnico e admin no seed do backend).
+
+## Segurança
+
+- Sessão em **cookie `httpOnly`** (`helpdesk_token`, `SameSite=Lax`): `fetch` sempre com
+  `credentials: 'include'`; **nenhum token em JS/storage**. 401 fora do login
+  volta a `/screens/login.html?motivo=sessao` com faixa explicativa.
+- Pills com SVG + texto (nunca só cor); modal de delete com foco preso e Esc;
+  erros 500 exibem código de suporte com botão copiar.
+- CSRF: mutações só em POST/PATCH/DELETE (Lax bloqueia cross-site); sem GET com efeito.
+- XSS: só `textContent` (`ui.setText`); CSP restritiva em todas as páginas; zero libs de runtime.
+- Servidor é a autoridade do RBAC; `data-requires` só esconde UI.
+
+## Acessibilidade e mobile
+
+- Labels associados, erros junto ao campo + foco, `aria-live`, skip-link, foco visível.
+- Vermelho só em acentos grandes; CTA primário Ink; pills com texto + símbolo.
+- Tabelas empilham ≤ 640 px; testado em 360 px sem rolagem horizontal.
