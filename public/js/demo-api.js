@@ -3,6 +3,7 @@
 // Liga só em host local (localhost / 127.0.0.1 / [::1]) e só quando pedido:
 //   ?demo=admin | ?demo=technician | ?demo=requester   (ou ?demo=1 → admin)
 //   ?demo=0  desliga e apaga os dados fictícios
+//   &banner=0  esconde a faixa de aviso (para screenshots), nesta aba
 // A escolha fica no localStorage; os dados (chamados, comentários, histórico)
 // ficam no sessionStorage, então criar/comentar/mudar estado persiste entre
 // telas até fechar a aba. Em produção (qualquer outro host) nunca é ativado.
@@ -10,6 +11,7 @@
 import { ALLOWED_TRANSITIONS } from './transitions.js';
 
 const MODE_KEY = 'elo-demo';
+const BANNER_KEY = 'elo-demo-banner';
 const DB_KEY = 'elo-demo-db';
 const ROLES = ['admin', 'technician', 'requester'];
 const LOCAL_HOSTS = ['localhost', '127.0.0.1', '[::1]', '::1'];
@@ -38,7 +40,9 @@ export function applyDemoParam(location = window.location) {
   if (param === '0' || param === 'off') local?.removeItem(MODE_KEY);
   else local?.setItem(MODE_KEY, ROLES.includes(param) ? param : 'admin');
   storage('sessionStorage')?.removeItem(DB_KEY);
+  if (url.searchParams.get('banner') === '0') storage('sessionStorage')?.setItem(BANNER_KEY, 'off');
   url.searchParams.delete('demo');
+  url.searchParams.delete('banner');
   window.history.replaceState(null, '', url.pathname + url.search + url.hash);
 }
 
@@ -336,7 +340,7 @@ function showBanner(role) {
 
 applyDemoParam();
 const activeRole = demoRole();
-if (activeRole) {
+if (activeRole && storage('sessionStorage')?.getItem(BANNER_KEY) !== 'off') {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => showBanner(activeRole));
   } else {
