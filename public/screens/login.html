@@ -3,16 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%23d04841'/%3E%3C/svg%3E" />
+    <link rel="icon" type="image/svg+xml" href="/assets/elo-icon.svg" />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' http://localhost:3000"
     />
-    <title>Entrar — HelpDesk BQ</title>
+    <title>Entrar — Elo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..700&family=JetBrains+Mono:wght@300..600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/tokens.css" />
@@ -22,9 +22,10 @@
   <body>
     <a class="skip-link" href="#main">Pular para o conteúdo</a>
     <main id="main" class="login-full">
-      <section class="login-left" aria-label="Sobre o sistema">
+      <section class="login-left pixel-bg is-dark" aria-label="Sobre o sistema" data-pixel-blast data-pixel-color="#B497CF" data-pixel-density="0.85" data-pixel-edge-fade="0.3">
         <div class="login-left__content">
-          <p class="eyebrow">HelpDesk BQ · ETEC Bento Quirino</p>
+          <img class="login-left__logo" src="/assets/elo-logo-white.svg" alt="Elo" width="113" height="40" />
+          <p class="eyebrow">ETEC Bento Quirino</p>
           <h2>Chamados organizados do registro à resolução</h2>
           <ul>
             <li>
@@ -64,13 +65,14 @@
                 </button>
               </div>
             </div>
-            <button id="submit" class="btn btn--primary" type="submit" data-testid="login-submit">Entrar</button>
+            <button id="submit" class="btn btn--primary" type="submit" data-testid="login-submit" data-busy-label="Entrando…"><svg class="btn__icon" aria-hidden="true"><use href="/assets/icons.svg#i-login"/></svg><span data-label>Entrar</span></button>
             <p class="form-note">Após 3 tentativas inválidas em 5 minutos, o acesso é bloqueado por 10 minutos.</p>
           </form>
         </div>
         </div>
       </div>
     </main>
+    <script type="module" src="/js/pixel-blast.js"></script>
     <script type="module" src="/js/pages/login.js"></script>
   </body>
 </html>

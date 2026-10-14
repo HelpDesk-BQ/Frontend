@@ -58,12 +58,85 @@ export function applyErrors(form, errors) {
   }
 }
 
+// Botão ocupado: desabilita, mostra o spinner (CSS em [aria-busy]) e, se o
+// botão tiver data-busy-label, troca o rótulo enquanto trabalha.
 export function setBusy(button, busy) {
   button.disabled = busy;
+  const label = button.querySelector('[data-label]') || null;
   if (busy) {
     button.setAttribute('aria-busy', 'true');
+    if (button.dataset.busyLabel && label) {
+      label.dataset.idle = label.textContent;
+      setText(label, button.dataset.busyLabel);
+    }
   } else {
     button.removeAttribute('aria-busy');
+    if (label && label.dataset.idle !== undefined) {
+      setText(label, label.dataset.idle);
+      delete label.dataset.idle;
+    }
+  }
+}
+
+// Ícone do sprite /assets/icons.svg (sempre decorativo: aria-hidden).
+export function icon(name, className = 'icon') {
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('class', className);
+  svg.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS(ns, 'use');
+  use.setAttribute('href', `/assets/icons.svg#i-${name}`);
+  svg.append(use);
+  return svg;
+}
+
+// Toast: aviso curto no canto, lido por leitor de tela (região polite).
+const TOAST_ICON = { success: 'check', error: 'alert', info: 'info' };
+
+export function toast(message, { tone = 'success', duration = 3800 } = {}) {
+  let region = document.getElementById('toasts');
+  if (!region) {
+    region = document.createElement('div');
+    region.id = 'toasts';
+    region.className = 'toasts';
+    region.setAttribute('role', 'status');
+    region.setAttribute('aria-live', 'polite');
+    document.body.append(region);
+  }
+  const item = document.createElement('div');
+  item.className = `toast toast--${tone}`;
+  const text = h('span', message);
+  item.append(icon(TOAST_ICON[tone] || 'info', 'icon toast__icon'), text);
+  region.append(item);
+  const remove = () => {
+    item.classList.add('is-leaving');
+    setTimeout(() => item.remove(), 250);
+  };
+  setTimeout(remove, duration);
+  item.addEventListener('click', remove);
+  return item;
+}
+
+// Recado que sobrevive a um redirecionamento (ex.: "Chamado aberto").
+const FLASH_KEY = 'elo-flash';
+
+export function flash(message, tone = 'success') {
+  try {
+    sessionStorage.setItem(FLASH_KEY, JSON.stringify({ message, tone }));
+  } catch {
+    /* sem storage: o recado se perde, a ação já foi feita */
+  }
+}
+
+export function consumeFlash() {
+  try {
+    const saved = sessionStorage.getItem(FLASH_KEY);
+    if (!saved) return null;
+    sessionStorage.removeItem(FLASH_KEY);
+    const { message, tone } = JSON.parse(saved);
+    return toast(message, { tone });
+  } catch {
+    return null;
   }
 }
 
@@ -128,10 +201,29 @@ export function priorityPill(priority) {
   return pill(svg, label, `priority-${priority}`);
 }
 
-export function renderEmpty(container, { title, actionText, actionHref }) {
+// Tempo relativo curto em pt-BR ("agora", "há 5 min", "há 3 h", "há 2 dias").
+// Acima de 30 dias mostra a data. `now` é injetável para teste.
+export function timeAgo(iso, now = Date.now()) {
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return '';
+  const minutes = Math.max(0, Math.round((now - then) / 60000));
+  if (minutes < 1) return 'agora';
+  if (minutes < 60) return `há ${minutes} min`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `há ${hours} h`;
+  const days = Math.round(hours / 24);
+  if (days <= 30) return days === 1 ? 'há 1 dia' : `há ${days} dias`;
+  return new Date(then).toLocaleDateString('pt-BR');
+}
+
+export function renderEmpty(container, { title, actionText, actionHref, iconName = 'inbox' }) {
   container.replaceChildren();
   const box = document.createElement('div');
   box.className = 'empty';
+  const mark = document.createElement('span');
+  mark.className = 'empty__icon';
+  mark.append(icon(iconName));
+  box.append(mark);
   const heading = document.createElement('p');
   heading.className = 'empty__title';
   setText(heading, title);

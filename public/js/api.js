@@ -1,6 +1,9 @@
-// Cliente HTTP da API HelpDesk BQ.
+// Cliente HTTP da API Elo.
 // Sessão via cookie httpOnly: o navegador envia sozinho (credentials:include),
 // nenhum token é guardado em JS (RNF04/XSS). Erros seguem o contrato do backend.
+// Em host local com ?demo=… as chamadas vão para a API falsa (demo-api.js).
+
+import { isDemoMode, demoRequest } from './demo-api.js';
 
 export const API_BASE_URL = globalThis.HELPDESK_API_URL || 'http://localhost:3000';
 
@@ -21,7 +24,8 @@ function correlationId() {
   return `web_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
-export async function api(path, { method = 'GET', body, redirect401 = true } = {}) {
+async function send(path, method, body) {
+  if (isDemoMode()) return demoRequest(path, { method, body });
   let response;
   try {
     response = await fetch(`${API_BASE_URL}${path}`, {
@@ -34,6 +38,25 @@ export async function api(path, { method = 'GET', body, redirect401 = true } = {
     throw new ApiError(0, 'NETWORK_ERROR', 'Verifique sua conexão.');
   }
   const payload = await response.json().catch(() => null);
+  return { ok: response.ok, status: response.status, payload };
+}
+
+// Avisa a interface (barra de progresso da casca) que há requisição em curso.
+function signal(delta) {
+  if (typeof window.dispatchEvent === 'function') {
+    window.dispatchEvent(new CustomEvent('elo:request', { detail: delta }));
+  }
+}
+
+export async function api(path, { method = 'GET', body, redirect401 = true } = {}) {
+  signal(1);
+  let response;
+  try {
+    response = await send(path, method, body);
+  } finally {
+    signal(-1);
+  }
+  const { payload } = response;
   if (!response.ok) {
     const err = payload?.error || {};
     // Sessão expirada em uso: volta ao login com motivo (fora da tela de login).

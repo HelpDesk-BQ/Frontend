@@ -3,86 +3,159 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%23d04841'/%3E%3C/svg%3E" />
+    <link rel="icon" type="image/svg+xml" href="/assets/elo-icon.svg" />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' http://localhost:3000"
     />
-    <title>Dashboard — HelpDesk BQ</title>
+    <title>Dashboard — Elo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..700&family=JetBrains+Mono:wght@300..600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/tokens.css" />
     <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/app.css" />
   </head>
-  <body>
+  <body class="app">
     <a class="skip-link" href="#main">Pular para o conteúdo</a>
-    <header class="topnav">
-      <div class="container topnav__inner">
-        <a class="topnav__brand" href="/screens/tickets.html">HelpDesk BQ</a>
-        <nav class="topnav__links" aria-label="Principal">
-          <a href="/screens/tickets.html">Chamados</a>
-          <a href="/screens/novo.html">Novo chamado</a>
-          <a href="/screens/dashboard.html" aria-current="page">Dashboard</a>
-          <a href="/screens/login.html" class="logout-link" data-action="logout"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4v12h5M6 8h7m0 0-2-2m2 2-2 2"/></svg>Sair</a>
+    <div class="app-shell">
+      <aside class="sidebar is-dark" id="sidebar" aria-label="Navegação do sistema">
+        <a class="sidebar__brand" href="/screens/dashboard.html"><img src="/assets/elo-logo-white.svg" alt="Elo — início" width="68" height="24" /></a>
+        <nav class="sidebar__nav" aria-label="Principal">
+          <a class="sidebar__link" href="/screens/dashboard.html" aria-current="page"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 2.5h4.5v4.5h-4.5zM9 2.5h4.5v3H9zM9 7.5h4.5v6H9zM2.5 9h4.5v4.5h-4.5z"/></svg><span data-label-requester="Início">Dashboard</span></a>
+          <a class="sidebar__link" href="/screens/tickets.html"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 9.5h3l1 2h4l1-2h3"/><path d="M2 9.5 4 3h8l2 6.5V13H2z"/></svg><span data-label-requester="Meus chamados">Chamados</span><span class="sidebar__count" data-shell-count hidden></span></a>
         </nav>
-      </div>
-    </header>
-    <main id="main" class="page">
-      <div class="container">
-        <p class="eyebrow">Totais</p>
-        <h1>Dashboard</h1>
-        <form id="filters" class="toolbar" aria-label="Filtros do resumo">
-          <div class="field">
-            <label for="status">Estado</label>
-            <select id="status" name="status">
-              <option value="">Todos</option>
-              <option value="open">Aberto</option>
-              <option value="analysis">Em análise</option>
-              <option value="in_progress">Em atendimento</option>
-              <option value="resolved">Resolvido</option>
-              <option value="closed">Fechado</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="priority">Prioridade</label>
-            <select id="priority" name="priority">
-              <option value="">Todas</option>
-              <option value="low">Baixa</option>
-              <option value="medium">Média</option>
-              <option value="high">Alta</option>
-              <option value="critical">Crítica</option>
-            </select>
-          </div>
-          <button id="reset-filters" class="btn btn--ghost" type="button" hidden>Remover filtros</button>
-        </form>
-        <div id="state-error" class="form-error" hidden></div>
-        <div id="summary" hidden>
-          <div class="stats" id="status-stats"></div>
-          <h2>Por prioridade</h2>
-          <div class="stats" id="priority-stats"></div>
-          <h2>Chamados recentes</h2>
-          <div class="table-wrap">
-            <table class="tickets">
-              <thead>
-                <tr>
-                  <th scope="col">Título</th>
-                  <th scope="col">Estado</th>
-                  <th scope="col">Prioridade</th>
-                </tr>
-              </thead>
-              <tbody id="recent-rows"></tbody>
-            </table>
-          </div>
-          <p><a class="btn btn--ghost" href="/screens/tickets.html">Ver todos os chamados</a></p>
+        <div class="sidebar__user">
+          <span class="sidebar__avatar" data-shell-initials aria-hidden="true"></span>
+          <span class="sidebar__who"><strong data-shell-name>…</strong><small data-shell-email></small><small data-shell-role></small></span>
+          <a class="sidebar__logout" href="/screens/login.html" data-action="logout" aria-label="Sair" title="Sair"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M9 2H4v12h5M6.5 8H14m0 0-2.5-2.5M14 8l-2.5 2.5"/></svg></a>
         </div>
-        <div id="summary-empty" hidden></div>
+      </aside>
+      <div class="app-main">
+        <header class="app-top">
+          <button class="app-top__menu" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu" hidden><span></span></button>
+          <a class="app-top__brand" href="/screens/dashboard.html"><img src="/assets/elo-logo.svg" alt="Elo — início" width="62" height="22" /></a>
+          <nav aria-label="Você está em"><ol class="crumbs"><li><a href="/screens/dashboard.html">Elo</a></li><li aria-current="page" data-label-requester="Início">Dashboard</li></ol></nav>
+          <div class="app-top__actions">
+            <a class="btn btn--primary btn--small" href="/screens/novo.html" data-requires="requester" hidden><svg class="btn__icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>Novo chamado</a>
+          </div>
+        </header>
+        <main id="main" class="app-content">
+          <header class="page-head">
+            <div>
+              <p class="eyebrow">Visão geral</p>
+              <h1 id="dash-title">Dashboard</h1>
+              <p class="page-head__lead" id="dash-lead"></p>
+            </div>
+          </header>
+          <div id="state-error" class="form-error" hidden></div>
+          <div id="dash-empty" hidden></div>
+
+          <!-- Esqueleto enquanto carrega -->
+          <div id="dash-skeleton" class="skeleton-group" aria-hidden="true">
+            <span class="skeleton skel-label"></span>
+            <div class="skel-row">
+              <span class="skeleton skel-card"></span><span class="skeleton skel-card"></span><span class="skeleton skel-card"></span>
+            </div>
+            <span class="skeleton skel-label"></span>
+            <span class="skeleton skel-bar"></span>
+            <span class="skeleton skel-label"></span>
+            <span class="skeleton skel-table"></span>
+          </div>
+          <p class="sr-only" role="status" id="dash-loading">Carregando o painel…</p>
+
+          <!-- Técnico e admin -->
+          <div id="staff-view" hidden>
+            <section class="dash-section" aria-labelledby="att-title">
+              <h2 class="eyebrow" id="att-title">Precisa de atenção</h2>
+              <div class="attention">
+                <a class="attention-card" id="att-unassigned" href="/screens/tickets.html?status=open">
+                  <svg class="icon attention-card__icon" aria-hidden="true"><use href="/assets/icons.svg#i-user-x"/></svg>
+                  <span class="attention-card__value" data-value>–</span>
+                  <span class="attention-card__label">abertos sem responsável</span>
+                  <span class="attention-card__hint">Ver abertos <svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#i-arrow-right"/></svg></span>
+                </a>
+                <a class="attention-card" id="att-critical" href="/screens/tickets.html?priority=critical">
+                  <svg class="icon attention-card__icon" aria-hidden="true"><use href="/assets/icons.svg#i-alert"/></svg>
+                  <span class="attention-card__value" data-value>–</span>
+                  <span class="attention-card__label">críticos ainda não fechados</span>
+                  <span class="attention-card__hint">Ver críticos <svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#i-arrow-right"/></svg></span>
+                </a>
+                <a class="attention-card" id="att-resolved" href="/screens/tickets.html?status=resolved">
+                  <svg class="icon attention-card__icon" aria-hidden="true"><use href="/assets/icons.svg#i-check-square"/></svg>
+                  <span class="attention-card__value" data-value>–</span>
+                  <span class="attention-card__label">resolvidos aguardando fechamento</span>
+                  <span class="attention-card__hint">Ver resolvidos <svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#i-arrow-right"/></svg></span>
+                </a>
+              </div>
+            </section>
+
+            <section class="dash-section" aria-labelledby="flow-title">
+              <h2 class="eyebrow" id="flow-title">Fluxo dos chamados</h2>
+              <ol class="pipeline" id="pipeline"></ol>
+            </section>
+
+            <div class="dash-grid">
+              <section aria-labelledby="queue-title">
+                <h2 class="eyebrow" id="queue-title">Fila de trabalho · mais urgentes</h2>
+                <div class="table-wrap" id="queue-wrap">
+                  <table class="tickets">
+                    <thead>
+                      <tr>
+                        <th scope="col">Chamado</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Prioridade</th>
+                        <th scope="col">Atualizado</th>
+                      </tr>
+                    </thead>
+                    <tbody id="queue-rows"></tbody>
+                  </table>
+                </div>
+                <p class="empty-inline" id="queue-empty" hidden>Nenhum chamado crítico ou de prioridade alta em andamento.</p>
+                <p class="section-foot"><a class="btn btn--secondary btn--small" href="/screens/tickets.html">Ver todos os chamados <svg class="btn__icon" aria-hidden="true"><use href="/assets/icons.svg#i-arrow-right"/></svg></a></p>
+              </section>
+              <section aria-labelledby="prio-title">
+                <h2 class="eyebrow" id="prio-title">Ativos por prioridade</h2>
+                <dl class="prio-bars" id="prio-bars"></dl>
+              </section>
+            </div>
+          </div>
+
+          <!-- Solicitante -->
+          <div id="requester-view" hidden>
+            <section class="welcome is-dark pixel-bg" aria-labelledby="welcome-title" data-pixel-blast data-pixel-color="#B497CF" data-pixel-density="0.85" data-pixel-edge-fade="0.15">
+              <div>
+                <h2 id="welcome-title">Algum problema com equipamento ou sistema?</h2>
+                <p>Abra um chamado e acompanhe cada passo por aqui.</p>
+              </div>
+              <a class="btn btn--primary btn--large btn--arrow" href="/screens/novo.html"><span class="btn__label">Abrir chamado</span><svg class="btn__arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+            </section>
+            <section aria-labelledby="mine-title">
+              <h2 class="eyebrow" id="mine-title">Seus chamados em andamento</h2>
+              <div class="table-wrap" id="mine-wrap">
+                <table class="tickets">
+                  <thead>
+                    <tr>
+                      <th scope="col">Chamado</th>
+                      <th scope="col">Estado</th>
+                      <th scope="col">Atualizado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="mine-rows"></tbody>
+                </table>
+              </div>
+              <p class="empty-inline" id="mine-empty" hidden>Você não tem chamados em andamento.</p>
+              <p class="section-foot"><a class="btn btn--secondary btn--small" href="/screens/tickets.html">Ver todos os meus chamados <svg class="btn__icon" aria-hidden="true"><use href="/assets/icons.svg#i-arrow-right"/></svg></a></p>
+            </section>
+          </div>
+        </main>
       </div>
-    </main>
+    </div>
+    <script type="module" src="/js/pixel-blast.js"></script>
     <script type="module" src="/js/pages/dashboard.js"></script>
   </body>
 </html>

@@ -1,5 +1,6 @@
 import { tickets, users, ApiError } from '../api.js';
 import { requireSession, applyRoleVisibility, logout } from '../auth.js';
+import { initShell } from '../shell.js';
 import {
   setText,
   statusPill,
@@ -15,6 +16,9 @@ import {
   charCounter,
   copySupportCode,
   STATUS_PT,
+  toast,
+  flash,
+  icon,
 } from '../ui.js';
 import { validateComment, validateJustification, validateStatusChange } from '../validators.js';
 import { nextStates } from '../transitions.js';
@@ -22,13 +26,68 @@ import { nextStates } from '../transitions.js';
 const user = await requireSession();
 if (!user) throw new Error('unreachable');
 applyRoleVisibility(user);
+initShell(user);
 
 const id = new URLSearchParams(window.location.search).get('id');
 const title = document.getElementById('ticket-title');
 const errorBox = document.getElementById('state-error');
 const detail = document.getElementById('detail');
 const fatalBox = document.getElementById('fatal');
+const skeleton = document.getElementById('detail-skeleton');
+const copyButton = document.getElementById('copy-id');
 let current = null;
+
+copyButton?.addEventListener('click', async () => {
+  if (!current) return;
+  try {
+    await navigator.clipboard.writeText(current.id);
+    toast('ID do chamado copiado.', { tone: 'info' });
+  } catch {
+    toast('Não foi possível copiar. Selecione o ID e copie manualmente.', { tone: 'error' });
+  }
+});
+
+// Botões de atalho para o próximo estado: só preenchem o formulário
+// (o salvar continua explícito), e levam o foco ao comentário quando ele
+// importa (resolver/fechar).
+const NEXT_STEP = {
+  analysis: ['Iniciar análise', 'arrow-right'],
+  in_progress: ['Iniciar atendimento', 'arrow-right'],
+  resolved: ['Marcar como resolvido', 'check'],
+  closed: ['Fechar chamado', 'check-square'],
+};
+
+function renderNextSteps(from) {
+  const box = document.getElementById('next-steps');
+  if (!box) return;
+  const buttons = box.querySelector('.next-steps__buttons');
+  buttons.replaceChildren();
+  const options = nextStates(from);
+  box.hidden = options.length === 0;
+  for (const next of options) {
+    const [label, iconName] = NEXT_STEP[next] || [STATUS_PT[next] || next, 'arrow-right'];
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn btn--secondary btn--small next-step';
+    button.setAttribute('aria-pressed', 'false');
+    button.append(icon(iconName, 'btn__icon'), h('span', from === 'resolved' && next === 'in_progress' ? 'Reabrir atendimento' : label));
+    button.addEventListener('click', () => {
+      const select = document.getElementById('status');
+      select.value = next;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+      for (const other of buttons.children) other.setAttribute('aria-pressed', String(other === button));
+      const target = next === 'resolved' || next === 'closed' ? document.getElementById('comment') : document.getElementById('manage-submit');
+      target.focus();
+    });
+    buttons.append(button);
+  }
+  // Escolher no select também reflete nos atalhos.
+  document.getElementById('status').onchange = (event) => {
+    for (const other of buttons.children) other.setAttribute('aria-pressed', 'false');
+    const index = options.indexOf(event.target.value);
+    if (index >= 0) buttons.children[index].setAttribute('aria-pressed', 'true');
+  };
+}
 
 for (const element of document.querySelectorAll('[data-action="logout"]')) {
   element.addEventListener('click', (event) => {
@@ -58,11 +117,13 @@ function fail(error) {
     errorBox.append(code, copy);
   }
   errorBox.hidden = false;
+  skeleton.hidden = true;
   announce(message);
 }
 
 function fatal(titleText, cause, actions) {
   detail.hidden = true;
+  skeleton.hidden = true;
   errorBox.hidden = true;
   setText(title, titleText);
   fatalBox.hidden = false;
@@ -85,7 +146,7 @@ async function reload() {
     const ticket = await tickets.get(id);
     current = ticket;
     setText(title, ticket.title);
-    document.title = `${ticket.title} — HelpDesk BQ`;
+    document.title = `${ticket.title} — Elo`;
     document.getElementById('ticket-status').replaceChildren(statusPill(ticket.status));
     document.getElementById('ticket-priority').replaceChildren(priorityPill(ticket.priority));
     const created = new Date(ticket.created_at).toLocaleString('pt-BR');
@@ -93,8 +154,11 @@ async function reload() {
     setText(document.getElementById('ticket-meta'), `#${ticket.id.slice(0, 8)} · criado em ${created} · atualizado em ${updated}`);
     setText(document.getElementById('ticket-description'), ticket.description);
     fillStatusOptions(ticket.status);
+    renderNextSteps(ticket.status);
     document.getElementById('priority').value = ticket.priority;
+    skeleton.hidden = true;
     detail.hidden = false;
+    if (copyButton) copyButton.hidden = false;
     syncDeleteButton();
     await Promise.all([loadComments(), loadHistory(), loadAssignees(ticket)]);
   } catch (error) {
@@ -283,7 +347,7 @@ manageForm?.addEventListener('submit', async (event) => {
     }
     manageForm.comment.value = '';
     manageForm.status.value = '';
-    announce(`Mudanças salvas: ${done.join(', ')}.`);
+    toast(`Mudanças salvas: ${done.join(', ')}.`);
     await reload();
   } catch (error) {
     // 409 (transição inválida, comentário exigido) volta ao formulário, não fatal.
@@ -306,7 +370,7 @@ document.getElementById('comment-form').addEventListener('submit', async (event)
   try {
     await tickets.addComment(id, form.body.value.trim());
     form.body.value = '';
-    announce('Comentário adicionado.');
+    toast('Comentário enviado.');
     await Promise.all([loadComments(), loadHistory()]);
   } catch (error) {
     fail(error);
@@ -347,7 +411,7 @@ document.getElementById('delete-form')?.addEventListener('submit', async (event)
   setBusy(button, true);
   try {
     await tickets.remove(id, form.justification.value.trim());
-    announce('Chamado excluído. Voltando à lista.');
+    flash('Chamado excluído e registrado na auditoria.');
     window.location.assign('/screens/tickets.html');
   } catch (error) {
     fail(error);

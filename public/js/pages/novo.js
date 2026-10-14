@@ -1,11 +1,13 @@
 import { tickets, ApiError } from '../api.js';
 import { requireSession, applyRoleVisibility, logout } from '../auth.js';
-import { applyErrors, setBusy, setText, announce, charCounter, confirmModal } from '../ui.js';
+import { initShell } from '../shell.js';
+import { applyErrors, setBusy, setText, announce, charCounter, confirmModal, flash } from '../ui.js';
 import { validateTicket } from '../validators.js';
 
 const user = await requireSession();
 if (!user) throw new Error('unreachable');
 applyRoleVisibility(user);
+initShell(user);
 
 const form = document.getElementById('ticket-form');
 const submit = document.getElementById('submit');
@@ -47,6 +49,7 @@ form.addEventListener('submit', async (event) => {
       priority: input.priority,
     });
     announce('Chamado aberto. Indo para o painel.');
+    flash('Chamado aberto. A equipe de TI já pode ver.');
     window.location.assign('/screens/dashboard.html');
   } catch (error) {
     const message = error instanceof ApiError ? error.message : 'Não foi possível concluir.';

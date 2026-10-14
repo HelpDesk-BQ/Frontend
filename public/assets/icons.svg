@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <!-- Ícones do Elo: 16×16, traço 1.5, cantos retos (linguagem de pixel).
+       Uso: <svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#i-nome"/></svg> -->
+  <defs>
+    <style>symbol { overflow: visible; }</style>
+  </defs>
+  <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+  <symbol id="i-check" viewBox="0 0 16 16"><path d="M3 8.5l3.5 3.5L13 4.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 16 16"><path d="M13 8H3m4-4L3 8l4 4"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 16 16"><path d="M10 3.5L5.5 8l4.5 4.5"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 16 16"><path d="M6 3.5L10.5 8 6 12.5"/></symbol>
+  <symbol id="i-send" viewBox="0 0 16 16"><path d="M2.5 8L14 2.5 10.5 14 8 9z"/><path d="M8 9l6-6.5"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 16 16"><path d="M2.5 4.5h11M6 4.5V2.5h4v2M4 4.5l.7 9h6.6l.7-9M6.8 7v4.5M9.2 7v4.5"/></symbol>
+  <symbol id="i-login" viewBox="0 0 16 16"><path d="M7 2h7v12H7M2 8h8m0 0L7.5 5.5M10 8l-2.5 2.5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 16 16"><path d="M5.5 5.5h8v8h-8z"/><path d="M10.5 5.5v-3h-8v8h3"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 16 16"><path d="M8 2l6.5 11.5h-13z"/><path d="M8 6.5v3.5M8 11.8v.2"/></symbol>
+  <symbol id="i-user-x" viewBox="0 0 16 16"><path d="M5.5 2.5h3v4h-3z"/><path d="M2 14v-2.5a2.5 2.5 0 0 1 2.5-2.5h4a2.5 2.5 0 0 1 2.5 2.5V14"/><path d="M11 3l3 3M14 3l-3 3"/></symbol>
+  <symbol id="i-check-square" viewBox="0 0 16 16"><path d="M2.5 2.5h11v11h-11z"/><path d="M5 8.2l2 2L11 6"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 16 16"><path d="M2 9.5h3l1 2h4l1-2h3"/><path d="M2 9.5L4 3h8l2 6.5V13H2z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 16 16"><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5"/></symbol>
+  <symbol id="i-message" viewBox="0 0 16 16"><path d="M2 2.5h12v8.5H8l-3.5 3V11H2z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 16 16"><path d="M2.5 2.5h11v11h-11z"/><path d="M8 5v3.5l2.5 1.5"/></symbol>
+  <symbol id="i-info" viewBox="0 0 16 16"><path d="M2.5 2.5h11v11h-11z"/><path d="M8 7v4.5M8 4.8v.2"/></symbol>
+  <symbol id="i-wrench" viewBox="0 0 16 16"><path d="M10.5 1.8a3.5 3.5 0 0 0-3.3 4.6L2 11.6 4.4 14l5.2-5.2a3.5 3.5 0 0 0 4.6-3.3l-2 1.2-1.6-.6-.6-1.6z"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 16 16"><path d="M3.5 14V2m0 1h9l-2 3 2 3h-9"/></symbol>
+  <symbol id="i-lightbulb" viewBox="0 0 16 16"><path d="M5.5 11.5h5M6 14h4M8 1.5a4.5 4.5 0 0 0-2.5 8.2v1.8h5V9.7A4.5 4.5 0 0 0 8 1.5z"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 16 16"><path d="M8 1.5L14.5 5 8 8.5 1.5 5z"/><path d="M1.5 8L8 11.5 14.5 8M1.5 11L8 14.5 14.5 11"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 16 16"><path d="M2 3h12l-4.5 5.5V13l-3 1.5v-6z"/></symbol>
+</svg>

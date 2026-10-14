@@ -1,4 +1,4 @@
-import { setText, h, fieldError, clearFieldErrors, applyErrors, setBusy, announce, statusPill, priorityPill, renderEmpty, historyText, renderFatal, confirmModal, charCounter, copySupportCode } from '../../public/js/ui.js';
+import { setText, h, fieldError, clearFieldErrors, applyErrors, setBusy, announce, statusPill, priorityPill, renderEmpty, historyText, renderFatal, confirmModal, charCounter, copySupportCode, timeAgo, icon, toast, flash, consumeFlash } from '../../public/js/ui.js';
 
 describe('setText (nunca innerHTML)', () => {
   test('escapes markup as text', () => {
@@ -226,5 +226,64 @@ describe('renderEmpty', () => {
     const link = document.querySelector('#e a');
     expect(link.textContent).toBe('Abrir chamado');
     expect(link.getAttribute('href')).toBe('/novo.html');
+  });
+});
+
+describe('timeAgo', () => {
+  const now = new Date('2026-10-14T12:00:00Z').getTime();
+  const ago = (ms) => new Date(now - ms).toISOString();
+
+  test('faixas curtas', () => {
+    expect(timeAgo(ago(20 * 1000), now)).toBe('agora');
+    expect(timeAgo(ago(5 * 60 * 1000), now)).toBe('há 5 min');
+    expect(timeAgo(ago(3 * 3600 * 1000), now)).toBe('há 3 h');
+    expect(timeAgo(ago(26 * 3600 * 1000), now)).toBe('há 1 dia');
+    expect(timeAgo(ago(5 * 86400 * 1000), now)).toBe('há 5 dias');
+  });
+
+  test('acima de 30 dias mostra a data; inválido vira vazio', () => {
+    expect(timeAgo(ago(40 * 86400 * 1000), now)).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+    expect(timeAgo('nada', now)).toBe('');
+  });
+});
+
+describe('icon', () => {
+  test('svg decorativo apontando para o sprite', () => {
+    const svg = icon('check');
+    expect(svg.getAttribute('aria-hidden')).toBe('true');
+    expect(svg.querySelector('use').getAttribute('href')).toBe('/assets/icons.svg#i-check');
+  });
+});
+
+describe('setBusy com rótulo de espera', () => {
+  test('troca e restaura o rótulo', () => {
+    document.body.innerHTML = '<button data-busy-label="Entrando…"><span data-label>Entrar</span></button>';
+    const button = document.querySelector('button');
+    setBusy(button, true);
+    expect(button.textContent).toBe('Entrando…');
+    expect(button.getAttribute('aria-busy')).toBe('true');
+    setBusy(button, false);
+    expect(button.textContent).toBe('Entrar');
+    expect(button.hasAttribute('aria-busy')).toBe(false);
+  });
+});
+
+describe('toast e flash', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    sessionStorage.clear();
+  });
+
+  test('toast entra numa região polite', () => {
+    toast('Mudanças salvas');
+    const region = document.getElementById('toasts');
+    expect(region.getAttribute('aria-live')).toBe('polite');
+    expect(region.textContent).toContain('Mudanças salvas');
+  });
+
+  test('flash sobrevive e é consumido uma vez', () => {
+    flash('Chamado aberto');
+    expect(consumeFlash().textContent).toContain('Chamado aberto');
+    expect(consumeFlash()).toBeNull();
   });
 });
