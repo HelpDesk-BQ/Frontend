@@ -3,64 +3,111 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%23d04841'/%3E%3C/svg%3E" />
+    <link rel="icon" type="image/svg+xml" href="/assets/elo-icon.svg" />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' http://localhost:3000"
     />
-    <title>Novo chamado — HelpDesk BQ</title>
+    <title>Novo chamado — Elo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..700&family=JetBrains+Mono:wght@300..600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/tokens.css" />
     <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/app.css" />
   </head>
-  <body>
+  <body class="app">
     <a class="skip-link" href="#main">Pular para o conteúdo</a>
-    <header class="topnav">
-      <div class="container topnav__inner">
-        <a class="topnav__brand" href="/screens/tickets.html">HelpDesk BQ</a>
-        <nav class="topnav__links" aria-label="Principal">
-          <a href="/screens/tickets.html">Chamados</a>
-          <a href="/screens/novo.html" aria-current="page">Novo chamado</a>
-          <a href="/screens/dashboard.html">Dashboard</a>
-          <a href="/screens/login.html" class="logout-link" data-action="logout"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4v12h5M6 8h7m0 0-2-2m2 2-2 2"/></svg>Sair</a>
+    <div class="app-shell">
+      <aside class="sidebar is-dark" id="sidebar" aria-label="Navegação do sistema">
+        <a class="sidebar__brand" href="/screens/dashboard.html"><img src="/assets/elo-logo-white.svg" alt="Elo — início" width="68" height="24" /></a>
+        <nav class="sidebar__nav" aria-label="Principal">
+          <a class="sidebar__link" href="/screens/dashboard.html"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 2.5h4.5v4.5h-4.5zM9 2.5h4.5v3H9zM9 7.5h4.5v6H9zM2.5 9h4.5v4.5h-4.5z"/></svg><span data-label-requester="Início">Dashboard</span></a>
+          <a class="sidebar__link" href="/screens/tickets.html" aria-current="page"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 9.5h3l1 2h4l1-2h3"/><path d="M2 9.5 4 3h8l2 6.5V13H2z"/></svg><span data-label-requester="Meus chamados">Chamados</span><span class="sidebar__count" data-shell-count hidden></span></a>
         </nav>
-      </div>
-    </header>
-    <main id="main" class="page">
-      <div class="container form-medium">
-        <p class="eyebrow">Abertura</p>
-        <h1>Novo chamado</h1>
-        <div class="card">
-          <form id="ticket-form" novalidate>
-            <div id="form-error" class="form-error" hidden></div>
-            <div class="field">
-              <label for="title">Título (10 a 100 caracteres)</label>
-              <input id="title" name="title" type="text" maxlength="100" required />
-            </div>
-            <div class="field">
-              <label for="description">Descrição (mínimo 30 caracteres)</label>
-              <textarea id="description" name="description" maxlength="5000" required></textarea>
-            </div>
-            <div class="field">
-              <label for="priority">Prioridade</label>
-              <select id="priority" name="priority" required>
-                <option value="low">Baixa</option>
-                <option value="medium" selected>Média</option>
-                <option value="high">Alta</option>
-                <option value="critical">Crítica</option>
-              </select>
-            </div>
-            <button id="submit" class="btn btn--primary" type="submit" data-testid="ticket-submit">Abrir chamado</button>
-          </form>
+        <div class="sidebar__user">
+          <span class="sidebar__avatar" data-shell-initials aria-hidden="true"></span>
+          <span class="sidebar__who"><strong data-shell-name>…</strong><small data-shell-email></small><small data-shell-role></small></span>
+          <a class="sidebar__logout" href="/screens/login.html" data-action="logout" aria-label="Sair" title="Sair"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M9 2H4v12h5M6.5 8H14m0 0-2.5-2.5M14 8l-2.5 2.5"/></svg></a>
         </div>
+      </aside>
+      <div class="app-main">
+        <header class="app-top">
+          <button class="app-top__menu" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu" hidden><span></span></button>
+          <a class="app-top__brand" href="/screens/dashboard.html"><img src="/assets/elo-logo.svg" alt="Elo — início" width="62" height="22" /></a>
+          <nav aria-label="Você está em"><ol class="crumbs"><li><a href="/screens/dashboard.html">Elo</a></li><li><a href="/screens/tickets.html" data-label-requester="Meus chamados">Chamados</a></li><li aria-current="page">Novo chamado</li></ol></nav>
+          <div class="app-top__actions">
+          </div>
+        </header>
+        <main id="main" class="app-content app-content--form">
+          <header class="page-head">
+            <div>
+              <p class="eyebrow">Abertura</p>
+              <h1>Novo chamado</h1>
+              <p class="page-head__lead">Descreva o problema; a equipe de TI recebe e acompanha por aqui.</p>
+            </div>
+          </header>
+          <div class="form-layout">
+          <div class="card">
+            <form id="ticket-form" novalidate>
+              <div id="form-error" class="form-error" hidden></div>
+              <div class="field">
+                <label for="title">Título (10 a 100 caracteres)</label>
+                <input id="title" name="title" type="text" maxlength="100" required />
+              </div>
+              <div class="field">
+                <label for="description">Descrição (mínimo 30 caracteres)</label>
+                <textarea id="description" name="description" maxlength="5000" required></textarea>
+              </div>
+              <fieldset class="field prio-field">
+                <legend>Prioridade</legend>
+                <div class="prio-options">
+                    <label class="prio-option prio-option--low">
+                      <input type="radio" name="priority" value="low" />
+                      <span class="prio-option__title">Baixa</span>
+                      <span class="prio-option__desc">Pode esperar; não atrapalha o trabalho.</span>
+                    </label>
+                    <label class="prio-option prio-option--medium">
+                      <input type="radio" name="priority" value="medium" checked />
+                      <span class="prio-option__title">Média</span>
+                      <span class="prio-option__desc">Atrapalha, mas dá para seguir.</span>
+                    </label>
+                    <label class="prio-option prio-option--high">
+                      <input type="radio" name="priority" value="high" />
+                      <span class="prio-option__title">Alta</span>
+                      <span class="prio-option__desc">Impede o trabalho de uma pessoa.</span>
+                    </label>
+                    <label class="prio-option prio-option--critical">
+                      <input type="radio" name="priority" value="critical" />
+                      <span class="prio-option__title">Crítica</span>
+                      <span class="prio-option__desc">Para um setor, laboratório ou aula.</span>
+                    </label>
+                </div>
+              </fieldset>
+              <div class="form-actions">
+                <button id="submit" class="btn btn--primary" type="submit" data-testid="ticket-submit" data-busy-label="Enviando…"><svg class="btn__icon" aria-hidden="true"><use href="/assets/icons.svg#i-send"/></svg><span data-label>Abrir chamado</span></button>
+                <a class="btn btn--ghost" href="/screens/dashboard.html">Cancelar</a>
+              </div>
+            </form>
+          </div>
+          <aside class="tips" aria-labelledby="tips-title">
+            <h2 id="tips-title" class="card-title"><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#i-lightbulb"/></svg>Para um atendimento mais rápido</h2>
+            <ul class="tips__list">
+              <li><strong>Onde:</strong> sala, laboratório ou setor.</li>
+              <li><strong>O quê:</strong> equipamento ou sistema afetado.</li>
+              <li><strong>Desde quando</strong> e se já funcionou antes.</li>
+              <li><strong>Mensagem de erro</strong>, se apareceu alguma.</li>
+            </ul>
+            <p class="tips__note">Você acompanha cada mudança de estado em “Meus chamados”.</p>
+          </aside>
+          </div>
+        </main>
       </div>
-    </main>
+    </div>
     <script type="module" src="/js/pages/novo.js"></script>
   </body>
 </html>

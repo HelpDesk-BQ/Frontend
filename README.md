@@ -1,6 +1,6 @@
-# Frontend HelpDesk BQ
+# Frontend Elo
 
-Interface web (HTML/CSS/JS nativo, multipage) do HelpDesk BQ.
+Interface web (HTML/CSS/JS nativo, multipage) do Elo.
 
 ## Páginas (`public/`)
 
@@ -28,6 +28,19 @@ npm run lint
 ```
 
 Login demo: `lia@exemplo.local` / `Solicitante123!` (técnico e admin no seed do backend).
+
+### Modo demonstração (sem backend)
+
+Para revisar a UI sem subir a API nem o Postgres, abra qualquer tela com `?demo=`:
+
+- `http://localhost:5500/screens/dashboard.html?demo=admin`
+- `?demo=technician` · `?demo=requester` — vê a interface de cada papel
+- `?demo=0` — desliga e volta a usar a API real
+
+Uma API falsa em memória (`public/js/demo-api.js`) responde com chamados, comentários,
+histórico e totais fictícios. Criar, comentar e mudar estado funciona e persiste até fechar
+a aba. Uma faixa no rodapé avisa que os dados são fictícios. **Só liga em `localhost` /
+`127.0.0.1`** — em qualquer outro host (deploy) o modo é ignorado e a API real é usada.
 
 ## Segurança
 

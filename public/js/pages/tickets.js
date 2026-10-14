@@ -1,12 +1,19 @@
-import { tickets, ApiError } from '../api.js';
+import { tickets, reports, ApiError } from '../api.js';
 import { requireSession, applyRoleVisibility, logout } from '../auth.js';
-import { setText, statusPill, priorityPill, renderEmpty, announce, confirmModal } from '../ui.js';
+import { initShell } from '../shell.js';
+import { setText, renderEmpty, announce, confirmModal } from '../ui.js';
+import { ticketRow } from '../ticket-rows.js';
 
 const user = await requireSession();
 if (!user) throw new Error('unreachable');
 applyRoleVisibility(user);
+initShell(user);
 
 const form = document.getElementById('filters');
+const tabs = [...document.querySelectorAll('#status-tabs .tab')];
+const prioritySelect = document.getElementById('priority');
+const reset = document.getElementById('reset-filters');
+const lead = document.getElementById('list-lead');
 const loading = document.getElementById('state-loading');
 const errorBox = document.getElementById('state-error');
 const emptyBox = document.getElementById('list-empty');
@@ -17,8 +24,16 @@ const pageInfo = document.getElementById('page-info');
 const prev = document.getElementById('prev');
 const next = document.getElementById('next');
 
-let page = 1;
 const LIMIT = 20;
+const STATUSES = ['open', 'analysis', 'in_progress', 'resolved', 'closed'];
+const PRIORITIES = ['low', 'medium', 'high', 'critical'];
+
+// Filtros vêm da URL (?status=&priority=) — assim os cards do dashboard
+// abrem a lista já filtrada — e voltam para ela a cada mudança.
+const params = new URLSearchParams(window.location.search);
+let status = STATUSES.includes(params.get('status')) ? params.get('status') : '';
+prioritySelect.value = PRIORITIES.includes(params.get('priority')) ? params.get('priority') : '';
+let page = 1;
 
 for (const element of document.querySelectorAll('[data-action="logout"]')) {
   element.addEventListener('click', (event) => {
@@ -32,44 +47,57 @@ for (const element of document.querySelectorAll('[data-action="logout"]')) {
   });
 }
 
+function syncControls() {
+  for (const tab of tabs) tab.setAttribute('aria-pressed', String(tab.dataset.status === status));
+  reset.hidden = status === '' && prioritySelect.value === '';
+  const query = new URLSearchParams();
+  if (status) query.set('status', status);
+  if (prioritySelect.value) query.set('priority', prioritySelect.value);
+  const suffix = query.toString();
+  window.history.replaceState(null, '', `${window.location.pathname}${suffix ? `?${suffix}` : ''}`);
+}
+
 function showOnly(name) {
   for (const [key, element] of Object.entries({ loading, error: errorBox, empty: emptyBox, list: wrap })) {
     element.hidden = key !== name;
   }
   pager.hidden = name !== 'list';
-  if (name !== 'error') errorBox.hidden = true;
+}
+
+// Contagens das abas: um resumo com o filtro de prioridade atual.
+async function loadCounts() {
+  try {
+    const summary = await reports.summary({ priority: prioritySelect.value });
+    for (const span of document.querySelectorAll('[data-count-for]')) {
+      const key = span.dataset.countFor;
+      setText(span, String(key === 'all' ? summary.total : summary.byStatus[key] || 0));
+    }
+  } catch {
+    document.querySelectorAll('[data-count-for]').forEach((span) => setText(span, ''));
+  }
 }
 
 async function load() {
   showOnly('loading');
   try {
-    const result = await tickets.list({ status: form.status.value, priority: form.priority.value, page, limit: LIMIT });
+    const result = await tickets.list({ status, priority: prioritySelect.value, page, limit: LIMIT });
     rows.replaceChildren();
+    setText(lead, `${result.total} ${result.total === 1 ? 'chamado' : 'chamados'}${status || prioritySelect.value ? ' com os filtros atuais' : ''}`);
     if (result.items.length === 0) {
       showOnly('empty');
-      renderEmpty(emptyBox, { title: 'Nenhum chamado por aqui.', actionText: 'Abrir chamado', actionHref: '/screens/novo.html' });
+      const filtered = status !== '' || prioritySelect.value !== '';
+      renderEmpty(
+        emptyBox,
+        user.role === 'requester' && !filtered
+          ? { title: 'Você ainda não abriu chamados.', actionText: 'Abrir chamado', actionHref: '/screens/novo.html' }
+          : { title: 'Nenhum chamado por aqui.', actionText: 'Ver todos', actionHref: '/screens/tickets.html' }
+      );
       announce('Nenhum chamado encontrado para os filtros.');
       return;
     }
-    for (const item of result.items) {
-      const tr = document.createElement('tr');
-      const titleCell = document.createElement('td');
-      titleCell.setAttribute('data-label', 'Título');
-      const link = document.createElement('a');
-      link.setAttribute('href', `/screens/detalhe.html?id=${encodeURIComponent(item.id)}`);
-      setText(link, item.title);
-      titleCell.append(link);
-      const statusCell = document.createElement('td');
-      statusCell.setAttribute('data-label', 'Estado');
-      statusCell.append(statusPill(item.status));
-      const priorityCell = document.createElement('td');
-      priorityCell.setAttribute('data-label', 'Prioridade');
-      priorityCell.append(priorityPill(item.priority));
-      tr.append(titleCell, statusCell, priorityCell);
-      rows.append(tr);
-    }
+    for (const item of result.items) rows.append(ticketRow(item, { user }));
     const totalPages = Math.max(1, Math.ceil(result.total / result.limit));
-    setText(pageInfo, `Página ${result.page} de ${totalPages} (${result.total} no total)`);
+    setText(pageInfo, `Página ${result.page} de ${totalPages}`);
     prev.disabled = result.page <= 1;
     next.disabled = result.page >= totalPages;
     showOnly('list');
@@ -79,40 +107,30 @@ async function load() {
   }
 }
 
-const reset = document.getElementById('reset-filters');
-
-function filtersActive() {
-  return form.status.value !== '' || form.priority.value !== '';
-}
-
-function syncReset() {
-  reset.hidden = !filtersActive();
-}
-
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
+function refresh({ counts = false } = {}) {
   page = 1;
-  syncReset();
+  syncControls();
+  if (counts) loadCounts();
   load();
-});
+}
 
-// Filtros aplicam sozinhos ao mudar; o botão vira "Remover filtros".
-for (const select of [form.status, form.priority]) {
-  select.addEventListener('change', () => {
-    page = 1;
-    syncReset();
-    load();
+for (const tab of tabs) {
+  tab.addEventListener('click', () => {
+    status = tab.dataset.status;
+    refresh();
   });
 }
-reset.addEventListener('click', () => {
-  form.status.value = '';
-  form.priority.value = '';
-  page = 1;
-  syncReset();
-  load();
-  form.status.focus();
+prioritySelect.addEventListener('change', () => refresh({ counts: true }));
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  refresh();
 });
-syncReset();
+reset.addEventListener('click', () => {
+  status = '';
+  prioritySelect.value = '';
+  refresh({ counts: true });
+  tabs[0].focus();
+});
 prev.addEventListener('click', () => {
   if (page > 1) {
     page -= 1;
@@ -124,4 +142,6 @@ next.addEventListener('click', () => {
   load();
 });
 
+syncControls();
+loadCounts();
 await load();

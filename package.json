@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "description": "Interface web do HelpDesk BQ (HTML/CSS/JS nativo, multipage)",
+  "description": "Interface web do Elo (HTML/CSS/JS nativo, multipage)",
   "type": "module",
   "scripts": {
     "dev": "npx serve public -l 5500",

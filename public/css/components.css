@@ -1,77 +1,188 @@
-/* Componentes: cards 16px, botões Ink, pills com texto+símbolo, tabelas que
-   empilham no mobile (RNF02: nada de rolagem horizontal). */
+/* Componentes do Elo Design System (docs/design-system.md).
+   Regras: borda fina de 1px (--border), raios da escala de pixel,
+   alturas de controle sm/md/lg, sem sombra em repouso. Tabelas empilham
+   no mobile (RNF02: nada de rolagem horizontal). */
 
-/* Botões — primário Ink (contraste AA); vermelho só em acentos grandes. */
+/* ---------- Botões ----------
+   primary   sólido preto, sem borda      → ação principal (1 por área)
+   secondary branco com borda fina      → ação alternativa
+   ghost     sem fundo e sem borda      → ação terciária / cancelar
+   danger    sólido vermelho            → ação destrutiva
+   Tamanhos: --small (32px), padrão (40px), --large (48px). */
+
 .btn {
-  display: inline-block;
-  font-family: var(--font-inter);
-  font-size: 14px;
-  font-weight: 500;
-  padding: 10px 18px;
-  border-radius: var(--radius-buttons);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-8);
+  height: var(--control-md);
+  padding: 0 var(--spacing-16);
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
   border: 1px solid transparent;
+  border-radius: var(--radius-button);
   cursor: pointer;
   text-decoration: none;
-  box-shadow: var(--shadow-sm);
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color var(--duration-fast) ease, border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease, transform var(--duration-fast) ease;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .btn:disabled {
-  opacity: 0.55;
+  opacity: 0.5;
   cursor: wait;
 }
 
 .btn--primary {
   background: var(--color-ink);
-  color: #fff;
+  color: var(--color-paper);
 }
 
-.btn--primary:hover {
+.btn--primary:hover:not(:disabled) {
   background: var(--color-graphite);
-  box-shadow: var(--shadow-md);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .btn {
-    transition: none;
-  }
+.btn--secondary,
+.btn--outline {
+  background: var(--surface-surface);
+  color: var(--color-ink);
+  border-color: var(--border-color-strong);
+}
+
+.btn--secondary:hover:not(:disabled),
+.btn--outline:hover:not(:disabled) {
+  border-color: var(--color-ash);
 }
 
 .btn--ghost {
   background: transparent;
   color: var(--color-ink);
-  box-shadow: none;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .btn--danger {
   background: var(--color-signal-red);
   color: #fff;
-  border: 2px solid var(--color-signal-red);
 }
 
 .btn--danger:hover:not(:disabled) {
   background: var(--color-signal-red-hover);
-  border-color: var(--color-signal-red-hover);
-  box-shadow: var(--shadow-md);
 }
 
 .btn--danger:disabled {
-  opacity: 0.55;
   cursor: not-allowed;
 }
 
+/* Ícone dentro do botão (ex.: "+" do Novo chamado). */
+.btn__icon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .btn--small {
-  padding: 6px 12px;
+  height: var(--control-sm);
+  padding: 0 var(--spacing-12);
   font-size: 13px;
 }
 
-/* Cards Paper sobre Bone. */
+.btn--large {
+  height: var(--control-lg);
+  padding: 0 22px;
+  font-size: 15px;
+}
+
+/* Seta que entra no hover: o rótulo desliza para a esquerda e a seta ocupa
+   o espaço liberado. Largura fixa — nada ao redor se mexe.
+   <a class="btn btn--primary btn--arrow"><span class="btn__label">…</span><svg class="btn__arrow">…</svg></a> */
+.btn--arrow {
+  position: relative;
+  overflow: hidden;
+  padding-inline: 20px;
+  --arrow-size: 12px;
+  --arrow-right: 12px;
+  --arrow-shift: -10px;
+}
+
+.btn--arrow.btn--small {
+  padding-inline: 16px;
+  --arrow-size: 11px;
+  --arrow-right: 9px;
+  --arrow-shift: -9px;
+}
+
+.btn--arrow.btn--large {
+  padding-inline: 26px;
+  --arrow-size: 14px;
+  --arrow-right: 14px;
+  --arrow-shift: -12px;
+}
+
+.btn__label {
+  display: inline-block;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.btn__arrow {
+  position: absolute;
+  right: var(--arrow-right);
+  top: 50%;
+  width: var(--arrow-size);
+  height: var(--arrow-size);
+  margin-top: calc(var(--arrow-size) / -2);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.25s ease, transform 0.35s var(--ease-out);
+}
+
+.btn--arrow:hover .btn__label,
+.btn--arrow:focus-visible .btn__label {
+  transform: translateX(var(--arrow-shift));
+}
+
+.btn--arrow:hover .btn__arrow,
+.btn--arrow:focus-visible .btn__arrow {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn__label,
+  .btn__arrow {
+    transition: none;
+  }
+
+  .btn:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* ---------- Card ---------- */
+
 .card {
   background: var(--surface-surface);
-  border-radius: var(--radius-cards);
-  box-shadow: var(--shadow-sm);
+  border: var(--border);
+  border-radius: var(--radius-sm);
   padding: var(--spacing-24);
 }
 
@@ -79,16 +190,23 @@
   margin-top: var(--spacing-16);
 }
 
-/* Formulários: label associado, erro junto ao campo. */
+/* Zona de perigo: contorno vermelho (2px visuais sem mudar o tamanho). */
+.card--danger {
+  border-color: var(--color-signal-red);
+  box-shadow: inset 0 0 0 1px var(--color-signal-red);
+}
+
+/* ---------- Formulários ---------- */
+
 .field {
   margin-bottom: var(--spacing-16);
 }
 
 .field label {
   display: block;
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: var(--spacing-4);
+  font-size: var(--text-body-sm);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: 6px;
 }
 
 .field input,
@@ -96,34 +214,54 @@
 .field textarea {
   width: 100%;
   font: inherit;
+  font-size: 15px;
   color: var(--color-ink);
-  background: #fff;
-  border: 1px solid var(--color-graphite);
-  border-radius: var(--radius-buttons);
-  padding: 10px 12px;
+  background: var(--surface-surface);
+  border: 1px solid var(--border-color-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--duration-fast) ease;
+}
+
+.field input,
+.field select {
+  height: var(--control-md);
+  padding: 0 var(--spacing-12);
 }
 
 .field textarea {
   min-height: 120px;
+  padding: 10px var(--spacing-12);
   resize: vertical;
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: var(--color-ash);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--color-ink);
 }
 
 .field [aria-invalid='true'] {
   border-color: var(--color-signal-red);
-  border-width: 2px;
+  box-shadow: inset 0 0 0 1px var(--color-signal-red);
 }
 
 .field-error {
   color: var(--color-ink);
-  border-left: 4px solid var(--color-signal-red);
+  border-left: 2px solid var(--color-signal-red);
   padding-left: var(--spacing-8);
-  font-size: 14px;
-  margin: var(--spacing-4) 0 0;
+  font-size: var(--text-body-sm);
+  margin: 6px 0 0;
 }
 
 .form-error {
-  border: 2px solid var(--color-signal-red);
-  border-radius: var(--radius-buttons);
+  border: 1px solid var(--color-signal-red);
+  border-radius: var(--radius-sm);
   background: var(--surface-surface);
   padding: var(--spacing-12) var(--spacing-16);
   margin-bottom: var(--spacing-16);
@@ -131,22 +269,79 @@
 
 .form-note {
   color: var(--color-charcoal);
-  font-size: 14px;
+  font-size: var(--text-body-sm);
 }
 
-/* Pills: papel com borda Graphite; informação no texto, nunca só na cor. */
+/* Asterisco de obrigatoriedade ao lado do label. */
+.required {
+  color: var(--color-signal-red);
+  font-weight: var(--font-weight-semibold);
+}
+
+.form-narrow {
+  max-width: 420px;
+}
+
+.form-medium {
+  max-width: 560px;
+}
+
+.char-counter {
+  text-align: right;
+}
+
+/* Campo de senha com olho. */
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  padding-right: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: var(--spacing-4);
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: var(--control-sm);
+  height: var(--control-sm);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-ink);
+}
+
+.password-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.password-toggle svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* ---------- Pill (estado / prioridade) ----------
+   Informação no texto e no símbolo, nunca só na cor. */
+
 .pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   min-width: 138px;
+  height: 26px;
+  padding: 0 10px;
   background: var(--surface-surface);
-  border: 1px solid var(--color-graphite);
-  border-radius: var(--radius-pill);
-  padding: 4px 12px;
+  border: 1px solid var(--border-color-strong);
+  border-radius: var(--radius-sm);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   white-space: nowrap;
 }
 
@@ -162,7 +357,7 @@
 .pill--status-critical,
 .pill--priority-critical {
   border-color: var(--color-signal-red);
-  border-width: 2px;
+  box-shadow: inset 0 0 0 1px var(--color-signal-red);
 }
 
 .pill--priority-critical .pill__symbol,
@@ -170,32 +365,34 @@
   color: var(--color-signal-red);
 }
 
-/* Tabelas que viram cartões no mobile. */
+/* ---------- Tabela (vira cartões no mobile) ---------- */
+
 .table-wrap {
   background: var(--surface-surface);
-  border-radius: var(--radius-cards);
-  box-shadow: var(--shadow-sm);
+  border: var(--border);
+  border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
 table.tickets {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: var(--text-body-sm);
 }
 
 .tickets th,
 .tickets td {
   text-align: left;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--color-mist);
+  border-bottom: var(--border);
   vertical-align: top;
 }
 
 .tickets th {
-  font-family: var(--font-mdio);
-  font-size: 12px;
-  letter-spacing: 0.05em;
+  font-family: var(--font-heading);
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-charcoal);
   background: var(--surface-elevated);
@@ -206,7 +403,7 @@ table.tickets {
 }
 
 .tickets tbody tr {
-  transition: background-color 0.15s ease;
+  transition: background-color var(--duration-fast) ease;
 }
 
 .tickets tbody tr:hover {
@@ -214,7 +411,7 @@ table.tickets {
 }
 
 .tickets a {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 @media (max-width: 640px) {
@@ -228,7 +425,7 @@ table.tickets {
 
   .tickets tr {
     display: block;
-    border-bottom: 2px solid var(--color-mist);
+    border-bottom: var(--border);
   }
 
   .tickets td {
@@ -239,12 +436,13 @@ table.tickets {
 
   .tickets td[data-label]::before {
     content: attr(data-label) ': ';
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     color: var(--color-charcoal);
   }
 }
 
-/* Filtros + paginação. */
+/* ---------- Filtros + paginação ---------- */
+
 .toolbar {
   display: flex;
   gap: var(--spacing-12);
@@ -263,23 +461,27 @@ table.tickets {
   gap: var(--spacing-8);
   align-items: center;
   margin-top: var(--spacing-16);
-  font-size: 14px;
+  font-size: var(--text-body-sm);
   color: var(--color-charcoal);
 }
 
-/* Estado vazio (RF14): explica + oferece ação. */
+/* ---------- Estado vazio (RF14): explica + oferece ação ---------- */
+
 .empty {
   text-align: center;
   padding: var(--spacing-48) var(--spacing-24);
 }
 
 .empty__title {
+  font-family: var(--font-heading);
   font-size: var(--text-subheading);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
   margin: 0 0 var(--spacing-16);
 }
 
-/* Linha do tempo do histórico. */
+/* ---------- Linha do tempo (marcador quadrado, como o fluxo) ---------- */
+
 .timeline {
   list-style: none;
   margin: 0;
@@ -287,10 +489,22 @@ table.tickets {
 }
 
 .timeline li {
-  border-left: 2px solid var(--color-mist);
-  padding: 0 0 var(--spacing-12) var(--spacing-16);
-  margin-left: 6px;
-  font-size: 14px;
+  position: relative;
+  border-left: var(--border);
+  padding: 0 0 var(--spacing-16) var(--spacing-20);
+  margin-left: 4px;
+  font-size: var(--text-body-sm);
+}
+
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 6px;
+  width: 7px;
+  height: 7px;
+  background: var(--color-ink);
+  border-radius: var(--radius-xs);
 }
 
 .timeline li:last-child {
@@ -299,21 +513,23 @@ table.tickets {
 
 .timeline time {
   color: var(--color-charcoal);
-  font-size: 12px;
+  font-size: var(--text-caption);
 }
 
-/* Comentários. */
+/* ---------- Comentários ---------- */
+
 .comment {
-  border-top: 1px solid var(--color-mist);
+  border-top: var(--border);
   padding: var(--spacing-12) 0;
-  font-size: 14px;
+  font-size: var(--text-body-sm);
 }
 
 .comment:first-child {
   border-top: none;
 }
 
-/* Grade do dashboard: cards iguais, destaque só no hover. */
+/* ---------- Totais do dashboard ---------- */
+
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -328,12 +544,31 @@ table.tickets {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--duration-base) ease, border-color var(--duration-base) ease;
 }
 
 .stats .stat:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--color-ash);
+}
+
+.stat {
+  text-align: center;
+  padding: var(--spacing-24) var(--spacing-16);
+}
+
+.stat__number {
+  font-family: var(--font-heading);
+  font-size: var(--text-heading);
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-display);
+  margin: 0;
+}
+
+.stat__label {
+  color: var(--color-charcoal);
+  font-size: var(--text-body-sm);
+  margin: var(--spacing-4) 0 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -344,22 +579,7 @@ table.tickets {
   }
 }
 
-.stat {
-  text-align: center;
-  padding: var(--spacing-24) var(--spacing-16);
-}
-
-.stat__number {
-  font-size: var(--text-heading);
-  font-weight: var(--font-weight-light);
-  margin: 0;
-}
-
-.stat__label {
-  color: var(--color-charcoal);
-  font-size: 14px;
-  margin: var(--spacing-4) 0 0;
-}
+/* ---------- Layout auxiliar ---------- */
 
 .actions-row {
   display: flex;
@@ -376,37 +596,6 @@ table.tickets {
   max-width: 720px;
 }
 
-/* Modal de confirmação acessível. */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(24, 23, 23, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-16);
-  z-index: 200;
-}
-
-.modal {
-  background: var(--surface-surface);
-  border-radius: var(--radius-cards);
-  box-shadow: var(--shadow-md);
-  padding: var(--spacing-24);
-  max-width: 480px;
-  width: 100%;
-}
-
-.modal h2 {
-  margin-top: 0;
-}
-
-/* Contador de caracteres sob o campo. */
-.char-counter {
-  text-align: right;
-}
-
-/* Card de metadados com duas colunas lado a lado. */
 .meta-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -423,27 +612,58 @@ table.tickets {
   }
 }
 
-/* Zona de perigo: contorno vermelho. */
-.card--danger {
-  border: 2px solid var(--color-signal-red);
+/* ---------- Modal de confirmação ---------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-16);
+  z-index: 200;
 }
 
-/* Asterisco de obrigatoriedade ao lado do label. */
-.required {
-  color: var(--color-signal-red);
-  font-weight: 600;
+.modal {
+  background: var(--surface-surface);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-24);
+  max-width: 480px;
+  width: 100%;
 }
 
-/* Formulário estreito: login e abertura. */
-.form-narrow {
-  max-width: 420px;
+.modal h2 {
+  margin-top: 0;
 }
 
-.form-medium {
-  max-width: 560px;
+/* ---------- Fundo pixelado (js/pixel-blast.js) ----------
+   O canvas fica atrás do conteúdo e não captura cliques. */
+
+.pixel-bg {
+  position: relative;
+  isolation: isolate;
 }
 
-/* Login em tela cheia: metade Ink com a marca, metade Bone com o form. */
+.pixel-blast__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.pixel-blast__canvas.is-ready {
+  opacity: var(--pixel-opacity, 1);
+}
+
+/* ---------- Login: metade escura com a marca, metade com o form ---------- */
+
 .login-full {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -451,11 +671,19 @@ table.tickets {
 }
 
 .login-left {
-  background: var(--color-ink);
+  background: var(--surface-inverse);
   color: #fff;
   display: flex;
   align-items: center;
   padding: var(--spacing-48);
+  overflow: hidden;
+  --pixel-opacity: 0.5;
+}
+
+/* Pixels mais fracos atrás do texto, mais fortes nas bordas. */
+.login-left .pixel-blast__canvas {
+  -webkit-mask-image: radial-gradient(ellipse 60% 45% at 45% 50%, rgba(0, 0, 0, 0.15), #000 85%);
+  mask-image: radial-gradient(ellipse 60% 45% at 45% 50%, rgba(0, 0, 0, 0.15), #000 85%);
 }
 
 .login-left__content {
@@ -465,13 +693,18 @@ table.tickets {
 }
 
 .login-left .eyebrow {
-  color: var(--color-signal-red);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.login-left__logo {
+  display: block;
+  height: 40px;
+  width: auto;
+  margin-bottom: var(--spacing-32);
 }
 
 .login-left h2 {
-  font-weight: var(--font-weight-light);
   font-size: var(--text-heading);
-  letter-spacing: -0.64px;
   margin: 0 0 var(--spacing-16);
 }
 
@@ -487,14 +720,16 @@ table.tickets {
   display: flex;
   gap: var(--spacing-12);
   align-items: flex-start;
-  font-size: 14px;
+  font-size: var(--text-body-sm);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .login-left li svg {
   flex: none;
   width: 20px;
   height: 20px;
-  margin-top: 2px;
+  margin-top: 1px;
+  color: #fff;
 }
 
 .login-left a {
@@ -527,31 +762,289 @@ table.tickets {
   }
 }
 
-/* Campo de senha com olho. */
-.password-wrap {
-  position: relative;
+/* ---------- Faixa do modo demonstração (js/demo-api.js) ----------
+   Só aparece em host local com ?demo=…; deixa claro que os dados são fictícios. */
+
+.demo-banner {
+  position: fixed;
+  left: 50%;
+  bottom: var(--spacing-16);
+  transform: translateX(-50%);
+  z-index: 80; /* abaixo da gaveta do menu (90/100) e do modal (200) */
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-16);
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: calc(100% - 32px);
+  padding: var(--spacing-8) var(--spacing-16);
+  background: var(--surface-inverse);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-heading);
+  font-size: var(--text-caption);
 }
 
-.password-wrap input {
-  padding-right: 44px;
+.demo-banner::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--color-brand-pixel);
 }
 
-.password-toggle {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-buttons);
-  padding: 6px;
+.demo-banner__links {
+  display: flex;
+  gap: var(--spacing-12);
+  flex-wrap: wrap;
+}
+
+.demo-banner a {
+  color: var(--color-brand-pixel);
+  text-underline-offset: 3px;
+}
+
+/* Espaço para a faixa não cobrir o fim do conteúdo — dentro da área de
+   conteúdo, não no body (no body sobrava uma faixa abaixo da barra lateral). */
+body:has(.demo-banner) .app-content {
+  padding-bottom: 104px;
+}
+
+/* Mobile: faixa compacta, de ponta a ponta, sem centralizar em coluna. */
+@media (max-width: 640px) {
+  .demo-banner {
+    left: var(--spacing-8);
+    right: var(--spacing-8);
+    bottom: var(--spacing-8);
+    transform: none;
+    max-width: none;
+    justify-content: flex-start;
+    gap: 4px var(--spacing-12);
+    padding: var(--spacing-8) var(--spacing-12);
+    font-size: 11px;
+  }
+
+  .demo-banner__links {
+    gap: var(--spacing-8);
+  }
+}
+
+/* ---------- Ícones (sprite /assets/icons.svg) ---------- */
+
+.icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -3px;
+}
+
+/* ---------- Botão ocupado: spinner quadrado (linguagem de pixel) ---------- */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btn[aria-busy='true'] {
+  cursor: wait;
+}
+
+.btn[aria-busy='true']:disabled {
+  opacity: 0.85;
+}
+
+.btn[aria-busy='true'] .btn__icon {
+  display: none;
+}
+
+.btn[aria-busy='true']::before {
+  content: '';
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: var(--radius-xs);
+  animation: spin 0.8s linear infinite;
+}
+
+/* ---------- Toasts ---------- */
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+.toasts {
+  position: fixed;
+  top: calc(var(--nav-height) + var(--spacing-12));
+  right: var(--spacing-16);
+  z-index: 250;
+  display: grid;
+  gap: var(--spacing-8);
+  width: min(360px, calc(100% - 32px));
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--surface-inverse);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  font-size: var(--text-body-sm);
+  line-height: 1.4;
+  pointer-events: auto;
   cursor: pointer;
-  color: var(--color-ink);
-  line-height: 0;
+  animation: toast-in 0.3s var(--ease-out);
 }
 
-.password-toggle svg {
+.toast.is-leaving {
+  animation: toast-out 0.25s ease forwards;
+}
+
+.toast__icon {
+  margin-top: 1px;
+  color: var(--color-brand-pixel);
+}
+
+.toast--error .toast__icon {
+  color: var(--color-signal-red-hover);
+}
+
+/* ---------- Barra de progresso (requisições em curso) ---------- */
+
+@keyframes progress {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+.app-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 300;
+  height: 2px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.app-progress::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: var(--color-brand);
+  animation: progress 1.1s ease-in-out infinite;
+}
+
+.app-progress.is-active {
+  opacity: 1;
+}
+
+/* ---------- Esqueletos de carregamento ---------- */
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+.skeleton {
+  display: block;
+  background: linear-gradient(90deg, #ebebeb 0%, #f7f7f7 45%, #ebebeb 90%);
+  background-size: 300% 100%;
+  border-radius: var(--radius-sm);
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* ---------- Selos ---------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-heading);
+  font-size: 10.5px;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* "novo": um dos momentos pontuais do roxo. */
+.badge--new {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
+.badge--new::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+}
+
+.badge--mine {
+  border: 1px solid var(--color-ink);
+  color: var(--color-ink);
+}
+
+/* ---------- Estado vazio com ícone ---------- */
+
+.empty__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--spacing-16);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-surface);
+  color: var(--color-ash);
+}
+
+.empty__icon .icon {
   width: 20px;
   height: 20px;
-  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .app-progress::before,
+  .btn[aria-busy='true']::before,
+  .toast {
+    animation: none;
+  }
 }
