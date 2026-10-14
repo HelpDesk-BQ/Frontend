@@ -3,9 +3,12 @@
 // nenhum token é guardado em JS (RNF04/XSS). Erros seguem o contrato do backend.
 // Em host local com ?demo=… as chamadas vão para a API falsa (demo-api.js).
 
-import { isDemoMode, demoRequest } from './demo-api.js';
+import { isDemoMode, demoRequest, isLocalHost } from './demo-api.js';
 
-export const API_BASE_URL = globalThis.HELPDESK_API_URL || 'http://localhost:3000';
+// Em produção a Vercel repassa /api/* para o backend no Render (vercel.json):
+// mesma origem, então o cookie SameSite=Lax e a CSP 'self' funcionam sem mudanças.
+export const API_BASE_URL =
+  globalThis.HELPDESK_API_URL || (isLocalHost() ? 'http://localhost:3000' : '');
 
 export class ApiError extends Error {
   constructor(status, code, message, correlationId = null) {
