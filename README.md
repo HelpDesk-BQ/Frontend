@@ -9,6 +9,8 @@
 
 Gestão de chamados de TI da [ETEC Bento Quirino](https://etecbentoquirino.com.br/new/).
 
+**[elobq.vercel.app →](https://elobq.vercel.app)**
+
 ![Versão](https://img.shields.io/badge/vers%C3%A3o-0.1%20alfa-8200db?style=flat-square)
 [![CI](https://github.com/HelpDesk-BQ/Frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/HelpDesk-BQ/Frontend/actions/workflows/ci.yml)
 ![HTML/CSS/JS](https://img.shields.io/badge/stack-HTML%20%C2%B7%20CSS%20%C2%B7%20JS-111111?style=flat-square)
@@ -54,42 +56,22 @@ registrado com quem fez, quando e o que mudou.
     <td align="center"><sub><b>Chamados</b> — abas por estado, selos "novo" e "com você", linha inteira clicável.</sub></td>
     <td align="center"><sub><b>Detalhe</b> — conversa e histórico à esquerda; ações e "próximo passo" à direita.</sub></td>
   </tr>
-  <tr>
-    <td width="50%"><img src=".github/assets/screenshots/app-dashboard-solicitante.png" alt="Início do solicitante"></td>
-    <td width="50%"><img src=".github/assets/screenshots/app-novo.png" alt="Novo chamado"></td>
-  </tr>
-  <tr>
-    <td align="center"><sub><b>Início do solicitante</b> — abrir chamado é a ação principal.</sub></td>
-    <td align="center"><sub><b>Novo chamado</b> — prioridade explicada e dicas para um atendimento rápido.</sub></td>
-  </tr>
 </table>
 
-<img src=".github/assets/screenshots/app-login.png" alt="Tela de entrada" width="100%">
+## Contas de teste
 
-<p align="center"><sub><b>Entrar</b> — sessão segura em cookie, com aviso de bloqueio após tentativas inválidas.</sub></p>
+Para experimentar em [elobq.vercel.app](https://elobq.vercel.app/screens/login.html), entre
+com uma conta de demonstração — uma por papel:
 
-## No celular
+| Papel | E-mail | Senha |
+| :-- | :-- | :-- |
+| Administrador | `admin@exemplo.local` | `Admin123!` |
+| Técnico | `tecnico@exemplo.local` | `Tecnico123!` |
+| Solicitante | `lia@exemplo.local` | `Solicitante123!` |
 
-<table>
-  <tr>
-    <td align="center" width="50%"><img src=".github/assets/screenshots/landing-mobile.png" alt="Página inicial no celular" width="300"></td>
-    <td align="center" width="50%"><img src=".github/assets/screenshots/app-mobile.png" alt="Dashboard no celular" width="300"></td>
-  </tr>
-  <tr>
-    <td align="center"><sub>Página inicial</sub></td>
-    <td align="center"><sub>Dashboard — a barra lateral vira menu</sub></td>
-  </tr>
-</table>
-
-## O site
-
-<img src=".github/assets/screenshots/landing-fluxo.png" alt="Seção de fluxo da página inicial" width="100%">
-
-<details>
-<summary><b>Ver a página inicial completa</b></summary>
-<br>
-<p align="center"><img src=".github/assets/screenshots/landing-page.png" alt="Página inicial completa" width="720"></p>
-</details>
+São dados fictícios criados pelo seed do [backend](https://github.com/HelpDesk-BQ/Backend)
+(`npm run db:seed`). Depois de 3 senhas erradas em 5 minutos, a conta fica bloqueada por
+10 minutos.
 
 ## Experiência
 
@@ -113,8 +95,8 @@ Regras completas em [`docs/design-system.md`](docs/design-system.md).
 ## Tecnologia
 
 HTML, CSS e JavaScript nativos (ES modules), sem framework, sem build e sem dependências de
-runtime. Testes com Jest, lint com ESLint e CI no GitHub Actions. O site é estático e vai
-para a **Vercel** em breve.
+runtime. Testes com Jest, lint com ESLint e CI no GitHub Actions. O site é estático e está
+na **Vercel**, que repassa `/api` para o backend no Render.
 
 Estrutura, rotas da API, segurança, modo demonstração, testes e deploy:
 **[documentação técnica →](docs/README.md)**
