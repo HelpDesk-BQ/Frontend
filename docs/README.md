@@ -169,15 +169,16 @@ O site é estático: na Vercel, **Framework Preset: Other**, sem comando de buil
 **Output Directory: `public`**. A Vercel serve `index.html` em `/` sozinha (o `serve.json`
 é só para o servidor local).
 
-Antes de apontar para a API em produção, há três ajustes — todos no front-end, exceto o
-último:
+Produção: **[elobq.vercel.app](https://elobq.vercel.app)**, com a API em
+`https://elobq-helpdesk-backend.onrender.com`.
 
-1. **URL da API.** `api.js` usa `globalThis.HELPDESK_API_URL` e cai em
-   `http://localhost:3000`. Definir a URL de produção (por exemplo, um `public/js/config.js`
-   carregado antes dos módulos, ou trocar o valor padrão).
-2. **CSP.** Cada HTML tem `connect-src 'self' http://localhost:3000`. Trocar pelo domínio
-   da API em produção (ou mover a CSP para cabeçalhos num `vercel.json`).
-3. **Cookie entre domínios (backend).** Com front e API em domínios diferentes, o cookie
-   `SameSite=Lax` não viaja nos `fetch`. Ou os dois ficam no mesmo site (ex.:
-   `app.dominio` + `api.dominio`), ou o backend passa a usar `SameSite=None; Secure` e CORS
-   com `credentials` para a origem da Vercel.
+O `vercel.json` repassa `/api/*` para o backend no Render. Fora de localhost, o `api.js` chama
+a mesma origem (`/api/...`). Para o navegador existe um site só, então:
+
+- o cookie `SameSite=Lax` da sessão funciona sem mudar o backend;
+- a CSP `connect-src 'self'` já cobre as chamadas;
+- não há CORS entre domínios.
+
+Em localhost o `api.js` continua usando `http://localhost:3000` (ou
+`globalThis.HELPDESK_API_URL`, se definido). Os previews da Vercel têm Deployment Protection:
+para abri-los, é preciso estar logado na Vercel.
